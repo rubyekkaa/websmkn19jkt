@@ -54,6 +54,17 @@ export type Guru = {
   foto?: string
 }
 
+export type UserRole = 'admin' | 'editor'
+
+export type Profile = {
+  id: string
+  email: string | null
+  role: UserRole
+  full_name: string | null
+  created_at: string
+  updated_at: string
+}
+
 export type TeacherGrup = 'Guru' | 'Tata Usaha'
 
 export type Teacher = {

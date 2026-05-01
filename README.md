@@ -19,10 +19,12 @@ Rebuild website resmi SMKN 19 Jakarta menggunakan **React + Vite + TypeScript + 
 
 ### Admin CMS (di `/admin`)
 - Login dengan email + password (Supabase Auth).
+- **Role-based access**: `admin` (akses penuh) dan `editor` (hanya Berita/Kategori/Tag).
 - Dashboard ringkasan jumlah berita, kategori, tag.
 - CRUD Berita dengan rich text editor (TipTap), upload cover ke Supabase Storage.
 - Kelola kategori dan tag.
-- **Kelola Guru & Tata Usaha** — tambah/edit/hapus, upload foto profil, atur urutan tampil di halaman Profil.
+- **Kelola Guru & Tata Usaha** (admin) — tambah/edit/hapus, upload foto profil, atur urutan tampil di halaman Profil.
+- **Kelola Pengguna** (admin) — lihat semua user dan promote/demote role admin↔editor.
 
 ---
 
@@ -40,11 +42,12 @@ npm install
 
 1. Buat proyek gratis di https://supabase.com.
 2. Di dashboard proyek → **SQL Editor** → New query → copy isi file [`supabase/schema.sql`](./supabase/schema.sql) → **Run**.
-3. Lalu jalankan migrasi tambahan [`supabase/teachers.sql`](./supabase/teachers.sql) (tabel guru/TU + seed 52 entri awal).
-4. Di **Storage** → **New bucket** → nama: `post-images` → centang **Public bucket** → **Save**.
-5. Buat juga bucket kedua: **New bucket** → nama: `teacher-photos` → centang **Public bucket** → **Save**.
-6. Di **Authentication** → **Users** → **Add user** → buat user admin (email + password).
-7. Di **Settings** → **API** → catat `Project URL` dan `anon public` key.
+3. Jalankan migrasi tambahan [`supabase/teachers.sql`](./supabase/teachers.sql) (tabel guru/TU + seed 52 entri awal).
+4. Jalankan migrasi [`supabase/roles.sql`](./supabase/roles.sql) (tabel `profiles` + role admin/editor + trigger auto-create profile saat user baru sign up).
+5. Di **Storage** → **New bucket** → nama: `post-images` → centang **Public bucket** → **Save**.
+6. Buat juga bucket kedua: **New bucket** → nama: `teacher-photos` → centang **Public bucket** → **Save**.
+7. Di **Authentication** → **Users** → **Add user** → buat user admin (email + password). Email `rubyekkaa@gmail.com` otomatis di-set role `admin` oleh migrasi `roles.sql`. Email lain default `editor` — promote via halaman `/admin/users`.
+8. Di **Settings** → **API** → catat `Project URL` dan `anon public` key.
 
 ### 3. Environment variables
 

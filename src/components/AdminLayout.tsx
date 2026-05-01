@@ -6,21 +6,42 @@ import {
   Home,
   LogOut,
   Plus,
+  Shield,
   Users,
+  type LucideIcon,
 } from 'lucide-react'
 import { useAuth } from '../lib/auth'
+import type { UserRole } from '../types'
 
-const NAV = [
-  { to: '/admin', label: 'Dashboard', icon: Home, end: true },
-  { to: '/admin/berita', label: 'Berita', icon: FileText },
-  { to: '/admin/kategori', label: 'Kategori', icon: FolderClosed },
-  { to: '/admin/tag', label: 'Tag', icon: Hash },
-  { to: '/admin/guru', label: 'Guru & TU', icon: Users },
+type NavItem = {
+  to: string
+  label: string
+  icon: LucideIcon
+  end?: boolean
+  roles: UserRole[]
+}
+
+const NAV: NavItem[] = [
+  { to: '/admin', label: 'Dashboard', icon: Home, end: true, roles: ['admin', 'editor'] },
+  { to: '/admin/berita', label: 'Berita', icon: FileText, roles: ['admin', 'editor'] },
+  { to: '/admin/kategori', label: 'Kategori', icon: FolderClosed, roles: ['admin', 'editor'] },
+  { to: '/admin/tag', label: 'Tag', icon: Hash, roles: ['admin', 'editor'] },
+  { to: '/admin/guru', label: 'Guru & TU', icon: Users, roles: ['admin'] },
+  { to: '/admin/users', label: 'Pengguna', icon: Shield, roles: ['admin'] },
 ]
 
 export function AdminLayout() {
-  const { user, signOut } = useAuth()
+  const { user, profile, loading, signOut } = useAuth()
   const navigate = useNavigate()
+
+  const role = profile?.role
+  // Kalau profile belum bisa di-fetch (migrasi roles.sql belum jalan),
+  // tampilkan semua menu sebagai fallback supaya admin tetap bisa navigasi.
+  // RLS di Supabase tetap melindungi data backend.
+  const profileMissing = !loading && !!user && !profile
+  const items = profileMissing
+    ? NAV
+    : NAV.filter((n) => (role ? n.roles.includes(role) : false))
 
   async function handleLogout() {
     await signOut()
@@ -47,7 +68,7 @@ export function AdminLayout() {
             </Link>
           </div>
           <nav className="flex-1 space-y-0.5 p-3">
-            {NAV.map(({ to, label, icon: Icon, end }) => (
+            {items.map(({ to, label, icon: Icon, end }) => (
               <NavLink
                 key={to}
                 to={to}
@@ -77,6 +98,17 @@ export function AdminLayout() {
               <p className="truncate font-medium text-gray-800">
                 {user?.email}
               </p>
+              {role && (
+                <span
+                  className={`mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
+                    role === 'admin'
+                      ? 'bg-brand-50 text-brand-700'
+                      : 'bg-gray-100 text-gray-700'
+                  }`}
+                >
+                  {role}
+                </span>
+              )}
             </div>
             <button
               type="button"
@@ -94,6 +126,23 @@ export function AdminLayout() {
           </div>
         </aside>
         <main className="flex-1 p-4 sm:p-6 lg:p-10">
+          {profileMissing && (
+            <div className="mb-6 rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
+              <p className="font-semibold">
+                Migrasi role belum dijalankan.
+              </p>
+              <p className="mt-1">
+                Jalankan{' '}
+                <code className="rounded bg-amber-100 px-1">
+                  supabase/roles.sql
+                </code>{' '}
+                di Supabase SQL Editor agar fitur role-based access aktif.
+                Selama migrasi belum jalan, semua menu ditampilkan tetapi
+                pembatasan akses tidak berfungsi di sisi frontend (backend RLS
+                tetap aman).
+              </p>
+            </div>
+          )}
           <Outlet />
         </main>
       </div>
