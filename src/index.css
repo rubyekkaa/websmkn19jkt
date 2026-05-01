@@ -1,0 +1,40 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+@plugin '@tailwindcss/forms';
+
+@theme {
+  --color-brand-50: #eef5ff;
+  --color-brand-100: #d9e7ff;
+  --color-brand-200: #bcd4ff;
+  --color-brand-300: #8eb7ff;
+  --color-brand-400: #598dff;
+  --color-brand-500: #3366ff;
+  --color-brand-600: #1f48f0;
+  --color-brand-700: #1a37cc;
+  --color-brand-800: #1c30a3;
+  --color-brand-900: #1c2f80;
+
+  --font-sans:
+    'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+    Arial, sans-serif;
+  --font-display: 'Plus Jakarta Sans', var(--font-sans);
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  background: #fff;
+  color: #111827;
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Smooth scroll for anchor links */
+html {
+  scroll-behavior: smooth;
+}
