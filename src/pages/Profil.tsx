@@ -25,13 +25,19 @@ export function Profil() {
   }, [q, kategori])
 
   const grouped = useMemo(() => {
-    const out: Record<string, typeof GURU> = {}
+    const out: Record<'Guru' | 'Tata Usaha', Record<string, typeof GURU>> = {
+      Guru: {},
+      'Tata Usaha': {},
+    }
     for (const g of filtered) {
-      out[g.kategori] = out[g.kategori] ?? []
-      out[g.kategori].push(g)
+      out[g.grup][g.kategori] = out[g.grup][g.kategori] ?? []
+      out[g.grup][g.kategori].push(g)
     }
     return out
   }, [filtered])
+
+  const totalGuru = useMemo(() => GURU.filter((g) => g.grup === 'Guru').length, [])
+  const totalTU = useMemo(() => GURU.filter((g) => g.grup === 'Tata Usaha').length, [])
 
   return (
     <>
@@ -162,13 +168,13 @@ export function Profil() {
         </Container>
       </section>
 
-      {/* Daftar Guru */}
+      {/* Daftar Guru & Tata Usaha */}
       <section className="py-20">
         <Container>
           <SectionHeader
-            eyebrow="Tenaga Pendidik"
-            title="Daftar Guru"
-            subtitle="Tim pengajar SMKN 19 Jakarta."
+            eyebrow="Tenaga Pendidik & Kependidikan"
+            title="Daftar Guru & Tata Usaha"
+            subtitle="Tim pengajar dan tenaga kependidikan SMKN 19 Jakarta."
           />
           <div className="mt-10 flex flex-wrap items-center gap-3">
             <div className="relative flex-1 sm:max-w-sm">
@@ -197,45 +203,64 @@ export function Profil() {
             </span>
           </div>
 
-          <div className="mt-10 space-y-10">
-            {Object.entries(grouped).map(([kat, list]) => (
-              <div key={kat}>
-                <div className="flex items-center justify-between">
-                  <h3 className="font-display text-lg font-semibold text-gray-900">
-                    {kat}
-                  </h3>
-                  <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600">
-                    {list.length} orang
-                  </span>
-                </div>
-                <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                  {list.map((g) => (
-                    <div
-                      key={g.name}
-                      className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-3 shadow-sm"
-                    >
-                      <div className="grid h-10 w-10 flex-none place-items-center rounded-full bg-gradient-to-br from-brand-100 to-brand-200 text-brand-700">
-                        <span className="text-xs font-semibold">
-                          {g.name
-                            .split(' ')
-                            .map((s) => s[0])
-                            .slice(0, 2)
-                            .join('')}
-                        </span>
+          <div className="mt-12 space-y-14">
+            {(['Guru', 'Tata Usaha'] as const).map((grup) => {
+              const totalGrup = grup === 'Guru' ? totalGuru : totalTU
+              const sections = Object.entries(grouped[grup])
+              if (sections.length === 0) return null
+              return (
+                <div key={grup}>
+                  <div className="flex items-center justify-between border-b border-gray-200 pb-3">
+                    <h2 className="font-display text-2xl font-bold text-gray-900">
+                      {grup === 'Guru' ? 'Daftar Guru' : 'Tata Usaha'}
+                    </h2>
+                    <span className="text-sm text-gray-500">
+                      Total: <span className="font-semibold text-gray-900">{totalGrup}</span> orang
+                    </span>
+                  </div>
+                  <div className="mt-8 space-y-10">
+                    {sections.map(([kat, list]) => (
+                      <div key={kat}>
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-display text-lg font-semibold text-gray-900">
+                            {kat}
+                          </h3>
+                          <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600">
+                            {list.length} orang
+                          </span>
+                        </div>
+                        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                          {list.map((g) => (
+                            <div
+                              key={g.name}
+                              className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-3 shadow-sm"
+                            >
+                              <div className="grid h-10 w-10 flex-none place-items-center rounded-full bg-gradient-to-br from-brand-100 to-brand-200 text-brand-700">
+                                <span className="text-xs font-semibold">
+                                  {g.name
+                                    .split(' ')
+                                    .map((s) => s[0])
+                                    .slice(0, 2)
+                                    .join('')}
+                                </span>
+                              </div>
+                              <div className="min-w-0">
+                                <p className="truncate text-sm font-semibold text-gray-900">
+                                  {g.name}
+                                </p>
+                                <p className="truncate text-xs text-gray-500">
+                                  {g.jabatan}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                      <div className="min-w-0">
-                        <p className="truncate text-sm font-semibold text-gray-900">
-                          {g.name}
-                        </p>
-                        <p className="truncate text-xs text-gray-500">
-                          {g.jabatan}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
             {filtered.length === 0 && (
               <p className="text-center text-sm text-gray-500">
                 Tidak ada hasil untuk pencarian Anda.

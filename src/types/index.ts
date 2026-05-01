@@ -50,5 +50,6 @@ export type Guru = {
   name: string
   jabatan: string
   kategori: string
+  grup: 'Guru' | 'Tata Usaha'
   foto?: string
 }
