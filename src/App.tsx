@@ -5,7 +5,7 @@ import {
 } from 'react-router-dom'
 import { Layout } from './components/Layout'
 import { AdminLayout } from './components/AdminLayout'
-import { ProtectedRoute } from './components/ProtectedRoute'
+import { ProtectedRoute, RoleGuard } from './components/ProtectedRoute'
 import { AuthProvider } from './lib/auth'
 import { Home } from './pages/Home'
 import { Profil } from './pages/Profil'
@@ -23,6 +23,7 @@ import { AdminKategori } from './pages/admin/Kategori'
 import { AdminTag } from './pages/admin/Tag'
 import { AdminGuru } from './pages/admin/Guru'
 import { AdminGuruForm } from './pages/admin/GuruForm'
+import { AdminUsers } from './pages/admin/Users'
 
 const routes: RouteObject[] = [
   {
@@ -54,9 +55,38 @@ const routes: RouteObject[] = [
       { path: 'berita/:id/edit', element: <AdminBeritaForm /> },
       { path: 'kategori', element: <AdminKategori /> },
       { path: 'tag', element: <AdminTag /> },
-      { path: 'guru', element: <AdminGuru /> },
-      { path: 'guru/baru', element: <AdminGuruForm /> },
-      { path: 'guru/:id/edit', element: <AdminGuruForm /> },
+      {
+        path: 'guru',
+        element: (
+          <RoleGuard roles={['admin']}>
+            <AdminGuru />
+          </RoleGuard>
+        ),
+      },
+      {
+        path: 'guru/baru',
+        element: (
+          <RoleGuard roles={['admin']}>
+            <AdminGuruForm />
+          </RoleGuard>
+        ),
+      },
+      {
+        path: 'guru/:id/edit',
+        element: (
+          <RoleGuard roles={['admin']}>
+            <AdminGuruForm />
+          </RoleGuard>
+        ),
+      },
+      {
+        path: 'users',
+        element: (
+          <RoleGuard roles={['admin']}>
+            <AdminUsers />
+          </RoleGuard>
+        ),
+      },
     ],
   },
 ]
