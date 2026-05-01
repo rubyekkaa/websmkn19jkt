@@ -53,3 +53,17 @@ export type Guru = {
   grup: 'Guru' | 'Tata Usaha'
   foto?: string
 }
+
+export type TeacherGrup = 'Guru' | 'Tata Usaha'
+
+export type Teacher = {
+  id: string
+  name: string
+  jabatan: string
+  kategori: string
+  grup: TeacherGrup
+  foto_url: string | null
+  sort_order: number
+  created_at: string
+  updated_at: string
+}

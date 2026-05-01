@@ -6,6 +6,7 @@ import {
   Home,
   LogOut,
   Plus,
+  Users,
 } from 'lucide-react'
 import { useAuth } from '../lib/auth'
 
@@ -14,6 +15,7 @@ const NAV = [
   { to: '/admin/berita', label: 'Berita', icon: FileText },
   { to: '/admin/kategori', label: 'Kategori', icon: FolderClosed },
   { to: '/admin/tag', label: 'Tag', icon: Hash },
+  { to: '/admin/guru', label: 'Guru & TU', icon: Users },
 ]
 
 export function AdminLayout() {

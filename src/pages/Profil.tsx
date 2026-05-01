@@ -1,20 +1,63 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Container } from '../components/Container'
 import { SectionHeader } from '../components/SectionHeader'
 import { GURU } from '../data/guru'
+import { supabase } from '../lib/supabase'
+import type { TeacherGrup } from '../types'
 import { Search } from 'lucide-react'
 
+type Person = {
+  name: string
+  jabatan: string
+  kategori: string
+  grup: TeacherGrup
+  foto_url: string | null
+  sort_order: number
+}
+
+const FALLBACK: Person[] = GURU.map((g, i) => ({
+  name: g.name,
+  jabatan: g.jabatan,
+  kategori: g.kategori,
+  grup: g.grup,
+  foto_url: null,
+  sort_order: i,
+}))
+
 export function Profil() {
+  const [people, setPeople] = useState<Person[]>(FALLBACK)
   const [q, setQ] = useState('')
   const [kategori, setKategori] = useState<string>('Semua')
 
+  useEffect(() => {
+    let cancelled = false
+    async function load() {
+      const { data, error } = await supabase
+        .from('teachers')
+        .select('name, jabatan, kategori, grup, foto_url, sort_order')
+        .order('grup', { ascending: true })
+        .order('sort_order', { ascending: true })
+        .order('name', { ascending: true })
+      if (cancelled) return
+      if (error || !data || data.length === 0) {
+        // Tabel teachers belum di-setup → tetap pakai fallback
+        return
+      }
+      setPeople(data as Person[])
+    }
+    void load()
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
   const kategoriList = useMemo(
-    () => ['Semua', ...Array.from(new Set(GURU.map((g) => g.kategori)))],
-    [],
+    () => ['Semua', ...Array.from(new Set(people.map((g) => g.kategori)))],
+    [people],
   )
 
   const filtered = useMemo(() => {
-    return GURU.filter((g) => {
+    return people.filter((g) => {
       const matchQ =
         !q ||
         g.name.toLowerCase().includes(q.toLowerCase()) ||
@@ -22,10 +65,10 @@ export function Profil() {
       const matchK = kategori === 'Semua' || g.kategori === kategori
       return matchQ && matchK
     })
-  }, [q, kategori])
+  }, [people, q, kategori])
 
   const grouped = useMemo(() => {
-    const out: Record<'Guru' | 'Tata Usaha', Record<string, typeof GURU>> = {
+    const out: Record<TeacherGrup, Record<string, Person[]>> = {
       Guru: {},
       'Tata Usaha': {},
     }
@@ -36,8 +79,14 @@ export function Profil() {
     return out
   }, [filtered])
 
-  const totalGuru = useMemo(() => GURU.filter((g) => g.grup === 'Guru').length, [])
-  const totalTU = useMemo(() => GURU.filter((g) => g.grup === 'Tata Usaha').length, [])
+  const totalGuru = useMemo(
+    () => people.filter((g) => g.grup === 'Guru').length,
+    [people],
+  )
+  const totalTU = useMemo(
+    () => people.filter((g) => g.grup === 'Tata Usaha').length,
+    [people],
+  )
 
   return (
     <>
@@ -199,7 +248,7 @@ export function Profil() {
               ))}
             </select>
             <span className="text-sm text-gray-500">
-              {filtered.length} dari {GURU.length}
+              {filtered.length} dari {people.length}
             </span>
           </div>
 
@@ -235,15 +284,24 @@ export function Profil() {
                               key={g.name}
                               className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-3 shadow-sm"
                             >
-                              <div className="grid h-10 w-10 flex-none place-items-center rounded-full bg-gradient-to-br from-brand-100 to-brand-200 text-brand-700">
-                                <span className="text-xs font-semibold">
-                                  {g.name
-                                    .split(' ')
-                                    .map((s) => s[0])
-                                    .slice(0, 2)
-                                    .join('')}
-                                </span>
-                              </div>
+                              {g.foto_url ? (
+                                <img
+                                  src={g.foto_url}
+                                  alt={g.name}
+                                  loading="lazy"
+                                  className="h-10 w-10 flex-none rounded-full object-cover"
+                                />
+                              ) : (
+                                <div className="grid h-10 w-10 flex-none place-items-center rounded-full bg-gradient-to-br from-brand-100 to-brand-200 text-brand-700">
+                                  <span className="text-xs font-semibold">
+                                    {g.name
+                                      .split(' ')
+                                      .map((s) => s[0])
+                                      .slice(0, 2)
+                                      .join('')}
+                                  </span>
+                                </div>
+                              )}
                               <div className="min-w-0">
                                 <p className="truncate text-sm font-semibold text-gray-900">
                                   {g.name}

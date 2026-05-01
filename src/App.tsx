@@ -21,6 +21,8 @@ import { AdminBeritaList } from './pages/admin/BeritaList'
 import { AdminBeritaForm } from './pages/admin/BeritaForm'
 import { AdminKategori } from './pages/admin/Kategori'
 import { AdminTag } from './pages/admin/Tag'
+import { AdminGuru } from './pages/admin/Guru'
+import { AdminGuruForm } from './pages/admin/GuruForm'
 
 const routes: RouteObject[] = [
   {
@@ -52,6 +54,9 @@ const routes: RouteObject[] = [
       { path: 'berita/:id/edit', element: <AdminBeritaForm /> },
       { path: 'kategori', element: <AdminKategori /> },
       { path: 'tag', element: <AdminTag /> },
+      { path: 'guru', element: <AdminGuru /> },
+      { path: 'guru/baru', element: <AdminGuruForm /> },
+      { path: 'guru/:id/edit', element: <AdminGuruForm /> },
     ],
   },
 ]
