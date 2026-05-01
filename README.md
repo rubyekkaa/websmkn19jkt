@@ -22,6 +22,7 @@ Rebuild website resmi SMKN 19 Jakarta menggunakan **React + Vite + TypeScript + 
 - Dashboard ringkasan jumlah berita, kategori, tag.
 - CRUD Berita dengan rich text editor (TipTap), upload cover ke Supabase Storage.
 - Kelola kategori dan tag.
+- **Kelola Guru & Tata Usaha** — tambah/edit/hapus, upload foto profil, atur urutan tampil di halaman Profil.
 
 ---
 
@@ -39,9 +40,11 @@ npm install
 
 1. Buat proyek gratis di https://supabase.com.
 2. Di dashboard proyek → **SQL Editor** → New query → copy isi file [`supabase/schema.sql`](./supabase/schema.sql) → **Run**.
-3. Di **Storage** → **New bucket** → nama: `post-images` → centang **Public bucket** → **Save**.
-4. Di **Authentication** → **Users** → **Add user** → buat user admin (email + password).
-5. Di **Settings** → **API** → catat `Project URL` dan `anon public` key.
+3. Lalu jalankan migrasi tambahan [`supabase/teachers.sql`](./supabase/teachers.sql) (tabel guru/TU + seed 52 entri awal).
+4. Di **Storage** → **New bucket** → nama: `post-images` → centang **Public bucket** → **Save**.
+5. Buat juga bucket kedua: **New bucket** → nama: `teacher-photos` → centang **Public bucket** → **Save**.
+6. Di **Authentication** → **Users** → **Add user** → buat user admin (email + password).
+7. Di **Settings** → **API** → catat `Project URL` dan `anon public` key.
 
 ### 3. Environment variables
 
