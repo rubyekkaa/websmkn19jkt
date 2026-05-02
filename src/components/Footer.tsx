@@ -16,9 +16,11 @@ export function Footer() {
         <div className="grid gap-10 py-14 md:grid-cols-4">
           <div>
             <div className="flex items-center gap-3">
-              <div className="grid h-10 w-10 place-items-center rounded-full bg-brand-500 text-white">
-                <span className="font-display text-sm font-bold">19</span>
-              </div>
+              <img
+                src="/images/logo_19.png"
+                alt="SMKN 19 Jakarta"
+                className="h-12 w-12 object-contain"
+              />
               <div className="leading-tight">
                 <p className="font-display text-base font-bold text-white">
                   SMKN 19 Jakarta

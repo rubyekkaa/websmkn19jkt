@@ -53,9 +53,11 @@ export function AdminLayout() {
         <aside className="flex w-full flex-none flex-col border-b border-gray-200 bg-white lg:w-64 lg:border-b-0 lg:border-r">
           <div className="flex h-16 items-center justify-between gap-3 border-b border-gray-100 px-5 lg:justify-start">
             <Link to="/admin" className="flex items-center gap-3">
-              <div className="grid h-8 w-8 place-items-center rounded-full bg-brand-600 text-white">
-                <span className="font-display text-xs font-bold">19</span>
-              </div>
+              <img
+                src="/images/logo_19.png"
+                alt="SMKN 19 Jakarta"
+                className="h-9 w-9 object-contain"
+              />
               <div className="leading-tight">
                 <p className="font-display text-sm font-bold text-gray-900">
                   Admin

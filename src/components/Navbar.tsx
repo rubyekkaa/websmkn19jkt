@@ -30,9 +30,11 @@ export function Navbar() {
             className="flex items-center gap-3"
             onClick={() => setOpen(false)}
           >
-            <div className="grid h-9 w-9 place-items-center rounded-full bg-brand-600 text-white shadow-sm">
-              <span className="font-display text-sm font-bold">19</span>
-            </div>
+            <img
+              src="/images/logo_19.png"
+              alt="SMKN 19 Jakarta"
+              className="h-10 w-10 object-contain"
+            />
             <div className="leading-tight">
               <p className="font-display text-sm font-bold text-gray-900">
                 SMKN 19

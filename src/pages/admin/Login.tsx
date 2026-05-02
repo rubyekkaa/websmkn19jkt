@@ -38,9 +38,11 @@ export function AdminLogin() {
     <div className="grid min-h-screen place-items-center bg-gradient-to-br from-brand-50 via-white to-gray-50 p-6">
       <div className="w-full max-w-sm rounded-2xl border border-gray-200 bg-white p-8 shadow-lg">
         <div className="text-center">
-          <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-brand-600 text-white">
-            <span className="font-display text-base font-bold">19</span>
-          </div>
+          <img
+            src="/images/logo_19.png"
+            alt="SMKN 19 Jakarta"
+            className="mx-auto h-16 w-16 object-contain"
+          />
           <h1 className="mt-4 font-display text-xl font-bold text-gray-900">
             Login Admin
           </h1>
