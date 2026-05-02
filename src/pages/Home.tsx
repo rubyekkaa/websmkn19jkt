@@ -13,22 +13,19 @@ const SLIDES = [
     title: 'SMKN 19 Jakarta',
     subtitle:
       'Sekolah Berkarakter & Berprestasi — Mencetak generasi siap kerja dan berwirausaha.',
-    image:
-      'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1600&q=70',
+    image: '/images/1.jpg',
   },
   {
     title: 'Belajar dari Industri',
     subtitle:
       'Kurikulum link & match dengan dunia industri, didukung praktik langsung di laboratorium modern.',
-    image:
-      'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1600&q=70',
+    image: '/images/2.jpg',
   },
   {
     title: 'Karakter, Iman, & Prestasi',
     subtitle:
       'Membangun siswa yang bertaqwa, cerdas, terampil, dan berwawasan lingkungan.',
-    image:
-      'https://images.unsplash.com/photo-1497486751825-1233686d5d80?auto=format&fit=crop&w=1600&q=70',
+    image: '/images/3.jpg',
   },
 ]
 
