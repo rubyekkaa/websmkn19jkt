@@ -34,6 +34,7 @@ export const VideoEmbed = Node.create({
       },
       provider: {
         default: null,
+        parseHTML: (element) => element.getAttribute('data-provider'),
       },
     }
   },

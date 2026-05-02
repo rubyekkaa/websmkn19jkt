@@ -13,7 +13,8 @@ const YOUTUBE_RE =
   /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|v\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/i
 const VIMEO_RE = /vimeo\.com\/(?:video\/)?(\d{5,})/i
 const DRIVE_RE = /drive\.google\.com\/file\/d\/([A-Za-z0-9_-]{10,})/i
-const FACEBOOK_RE = /(?:facebook\.com|fb\.watch)\//i
+const FACEBOOK_RE =
+  /^https?:\/\/(?:www\.)?(?:[a-z0-9-]+\.)?(?:facebook\.com|fb\.watch)\//i
 const DIRECT_VIDEO_RE = /\.(mp4|webm|ogg|mov)(?:\?.*)?$/i
 
 export function parseVideoUrl(input: string): VideoEmbed | null {
