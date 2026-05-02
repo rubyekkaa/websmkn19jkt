@@ -16,9 +16,21 @@ type AuthCtx = {
   profile: Profile | null
   role: UserRole | null
   loading: boolean
+  /**
+   * `true` kalau tabel `profiles` belum dibuat (migrasi `roles.sql` belum
+   * dijalankan). Hanya bernilai true kalau Supabase mengembalikan error
+   * "table not found" / PGRST205. Untuk error lain (RLS block, network),
+   * tetap `false` supaya RoleGuard bisa menolak akses dengan tegas.
+   */
+  migrationMissing: boolean
   signIn: (email: string, password: string) => Promise<void>
   signOut: () => Promise<void>
   refreshProfile: () => Promise<void>
+}
+
+type FetchResult = {
+  profile: Profile | null
+  migrationMissing: boolean
 }
 
 const Ctx = createContext<AuthCtx | null>(null)
@@ -26,16 +38,35 @@ const Ctx = createContext<AuthCtx | null>(null)
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
+  const [migrationMissing, setMigrationMissing] = useState(false)
   const [loading, setLoading] = useState(true)
 
-  async function fetchProfile(userId: string): Promise<Profile | null> {
+  async function fetchProfile(userId: string): Promise<FetchResult> {
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', userId)
       .maybeSingle()
-    if (error || !data) return null
-    return data as Profile
+    if (error) {
+      const code = error.code ?? ''
+      const msg = error.message ?? ''
+      const tableMissing =
+        code === 'PGRST205' ||
+        code === '42P01' ||
+        msg.toLowerCase().includes('does not exist') ||
+        msg.toLowerCase().includes('schema cache')
+      return { profile: null, migrationMissing: tableMissing }
+    }
+    return {
+      profile: (data as Profile | null) ?? null,
+      migrationMissing: false,
+    }
+  }
+
+  async function applyProfile(userId: string) {
+    const { profile: p, migrationMissing: m } = await fetchProfile(userId)
+    setProfile(p)
+    setMigrationMissing(m)
   }
 
   useEffect(() => {
@@ -56,8 +87,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (cancelled) return
         setSession(data.session)
         if (data.session?.user) {
-          const p = await fetchProfile(data.session.user.id)
-          if (!cancelled) setProfile(p)
+          await applyProfile(data.session.user.id)
         }
         if (!cancelled) {
           setLoading(false)
@@ -71,15 +101,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       })
 
+    // PENTING: jangan call supabase methods langsung di dalam callback ini —
+    // Supabase JS bisa deadlock kalau dipanggil sinkron di dalam listener.
+    // Defer dengan setTimeout(..., 0).
+    // Ref: https://supabase.com/docs/reference/javascript/auth-onauthstatechange
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_e, s) => {
+    } = supabase.auth.onAuthStateChange((_e, s) => {
       setSession(s)
       if (s?.user) {
-        const p = await fetchProfile(s.user.id)
-        setProfile(p)
+        const userId = s.user.id
+        window.setTimeout(() => {
+          if (!cancelled) void applyProfile(userId)
+        }, 0)
       } else {
         setProfile(null)
+        setMigrationMissing(false)
       }
     })
     return () => {
@@ -87,6 +124,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       window.clearTimeout(timeoutId)
       subscription.unsubscribe()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const value = useMemo<AuthCtx>(
@@ -96,6 +134,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       profile,
       role: profile?.role ?? null,
       loading,
+      migrationMissing,
       async signIn(email, password) {
         const { error } = await supabase.auth.signInWithPassword({
           email,
@@ -108,12 +147,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       },
       async refreshProfile() {
         if (session?.user) {
-          const p = await fetchProfile(session.user.id)
-          setProfile(p)
+          await applyProfile(session.user.id)
         }
       },
     }),
-    [session, profile, loading],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [session, profile, loading, migrationMissing],
   )
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>

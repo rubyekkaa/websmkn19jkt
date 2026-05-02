@@ -37,14 +37,13 @@ export function RoleGuard({
   children: ReactNode
   roles: UserRole[]
 }) {
-  const { user, profile, loading } = useAuth()
+  const { user, profile, loading, migrationMissing } = useAuth()
 
   if (loading) return <Spinner />
 
-  // Profile belum ada (migrasi belum jalan) → fallback: izinkan akses untuk
-  // user yang sudah login. Banner peringatan ada di AdminLayout. Backend RLS
-  // tetap melindungi tabel di Supabase.
-  if (!profile && user) return <>{children}</>
+  // Migration belum jalan (tabel profiles belum ada) → izinkan akses
+  // sementara, banner peringatan di AdminLayout. Backend RLS tetap aman.
+  if (migrationMissing && user) return <>{children}</>
 
   if (!profile || !roles.includes(profile.role)) {
     return (

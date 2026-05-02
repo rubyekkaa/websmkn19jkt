@@ -31,15 +31,14 @@ const NAV: NavItem[] = [
 ]
 
 export function AdminLayout() {
-  const { user, profile, loading, signOut } = useAuth()
+  const { user, profile, signOut, migrationMissing } = useAuth()
   const navigate = useNavigate()
 
   const role = profile?.role
-  // Kalau profile belum bisa di-fetch (migrasi roles.sql belum jalan),
+  // Kalau migrasi roles.sql belum jalan (tabel profiles belum ada),
   // tampilkan semua menu sebagai fallback supaya admin tetap bisa navigasi.
   // RLS di Supabase tetap melindungi data backend.
-  const profileMissing = !loading && !!user && !profile
-  const items = profileMissing
+  const items = migrationMissing
     ? NAV
     : NAV.filter((n) => (role ? n.roles.includes(role) : false))
 
@@ -126,7 +125,7 @@ export function AdminLayout() {
           </div>
         </aside>
         <main className="flex-1 p-4 sm:p-6 lg:p-10">
-          {profileMissing && (
+          {migrationMissing && (
             <div className="mb-6 rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
               <p className="font-semibold">
                 Migrasi role belum dijalankan.
