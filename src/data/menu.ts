@@ -86,6 +86,11 @@ export const MENU: MenuItem[] = [
         label: 'Kegiatan Rutin',
         description: 'Galeri kegiatan rutin sekolah',
       },
+      {
+        to: '/kesiswaan/prestasi',
+        label: 'Prestasi',
+        description: 'Galeri kejuaraan & capaian siswa',
+      },
     ],
   },
   {
@@ -129,6 +134,11 @@ export const MENU: MenuItem[] = [
         to: '/sarpras/tefa-akuntansi',
         label: 'TeFa Akuntansi',
         description: 'Teaching factory AKL',
+      },
+      {
+        to: '/sarpras/uks',
+        label: 'UKS',
+        description: 'Unit Kesehatan Sekolah',
       },
     ],
   },

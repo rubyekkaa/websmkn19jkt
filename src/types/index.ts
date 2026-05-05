@@ -102,3 +102,33 @@ export type GalleryPhoto = {
   sort_order: number
   created_at: string
 }
+
+export type MoUStatus = 'aktif' | 'berakhir'
+
+export type MoUPartner = {
+  id: string
+  partner_name: string
+  partner_logo_url: string | null
+  description: string | null
+  signed_at: string
+  expires_at: string | null
+  document_url: string | null
+  status: MoUStatus | null
+  sort_order: number
+  created_at: string
+  updated_at: string
+}
+
+export type AgendaCategory = 'Ujian' | 'Akademik' | 'Libur' | 'Kegiatan' | string
+
+export type AgendaEvent = {
+  id: string
+  title: string
+  start_at: string
+  end_at: string | null
+  location: string | null
+  category: AgendaCategory | null
+  description: string | null
+  created_at: string
+  updated_at: string
+}

@@ -282,7 +282,7 @@ export function AdminGalleryDetail() {
     next[idx + direction] = a
     setPhotos(next)
     // Persist swap; tidak harus menunggu kedua selesai untuk UX cepat
-    await Promise.all([
+    const results = await Promise.all([
       supabase
         .from('gallery_photos')
         .update({ sort_order: a.sort_order })
@@ -292,6 +292,12 @@ export function AdminGalleryDetail() {
         .update({ sort_order: b.sort_order })
         .eq('id', b.id),
     ])
+    const failed = results.find((r) => r.error)
+    if (failed?.error) {
+      setError(failed.error.message)
+      // Revert local state to avoid mismatch with DB
+      if (slug) void loadCollection(slug)
+    }
   }
 
   const photoCount = useMemo(() => photos.length, [photos])
