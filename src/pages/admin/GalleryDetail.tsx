@@ -113,6 +113,11 @@ export function AdminGalleryDetail() {
       if (!name.trim()) throw new Error('Nama koleksi wajib diisi.')
       const finalSlug = (collSlug.trim() || slugify(name)) || ''
       if (!finalSlug) throw new Error('Slug tidak valid.')
+      if (finalSlug === NEW_SLUG_SENTINEL) {
+        throw new Error(
+          `Slug "${NEW_SLUG_SENTINEL}" dicadangkan oleh sistem. Pakai slug lain.`,
+        )
+      }
 
       const payload = {
         name: name.trim(),
