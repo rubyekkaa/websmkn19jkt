@@ -135,6 +135,11 @@ export const MENU: MenuItem[] = [
         label: 'TeFa Akuntansi',
         description: 'Teaching factory AKL',
       },
+      {
+        to: '/sarpras/uks',
+        label: 'UKS',
+        description: 'Unit Kesehatan Sekolah',
+      },
     ],
   },
   { to: '/berita', label: 'Berita', tone: 'gray' },
