@@ -10,6 +10,7 @@ import {
   Handshake,
   Building2,
   Trophy,
+  Award,
   FlaskConical,
   Camera,
   Newspaper,
@@ -337,7 +338,7 @@ export function Home() {
             </div>
           ))}
         </div>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+        <div className="mt-6 grid gap-4 sm:grid-cols-3">
           <FeatureLink
             tone="teal"
             to="/kesiswaan/ekstrakurikuler"
@@ -351,6 +352,13 @@ export function Home() {
             icon={Sparkles}
             title="Kegiatan Rutin"
             desc="Galeri acara siswa SMKN 19"
+          />
+          <FeatureLink
+            tone="teal"
+            to="/kesiswaan/prestasi"
+            icon={Award}
+            title="Prestasi"
+            desc="Galeri kejuaraan & capaian siswa"
           />
         </div>
       </SoftSection>

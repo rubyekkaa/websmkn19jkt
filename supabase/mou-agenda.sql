@@ -103,3 +103,12 @@ drop policy if exists "mou-files authenticated delete" on storage.objects;
 create policy "mou-files authenticated delete"
   on storage.objects for delete
   using (bucket_id = 'mou-files' and auth.uid() is not null);
+
+-- =================================================================
+-- Tambahan koleksi galeri: Prestasi siswa (Kesiswaan).
+-- Aman dijalankan walau tabel gallery_collections sudah ada / sudah berisi
+-- data, karena pakai ON CONFLICT (slug) DO NOTHING.
+-- =================================================================
+insert into public.gallery_collections (slug, name, category, description, sort_order) values
+  ('prestasi', 'Prestasi Siswa', 'kesiswaan', 'Galeri kejuaraan akademik, lomba bidang keahlian, ekstrakurikuler, dan capaian siswa lainnya.', 35)
+on conflict (slug) do nothing;

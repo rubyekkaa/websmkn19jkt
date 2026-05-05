@@ -24,6 +24,7 @@ import { HumasDudiKunjungan } from './pages/HumasDudiKunjungan'
 import { HumasDudiKelasIndustri } from './pages/HumasDudiKelasIndustri'
 import { Kesiswaan } from './pages/Kesiswaan'
 import { KesiswaanKegiatanRutin } from './pages/KesiswaanKegiatanRutin'
+import { KesiswaanPrestasi } from './pages/KesiswaanPrestasi'
 import { Sarpras } from './pages/Sarpras'
 import { SarprasGallery } from './pages/SarprasGallery'
 import { AdminLogin } from './pages/admin/Login'
@@ -65,6 +66,7 @@ const routes: RouteObject[] = [
       { path: '/kesiswaan', element: <Kesiswaan /> },
       { path: '/kesiswaan/ekstrakurikuler', element: <Ekstrakurikuler /> },
       { path: '/kesiswaan/kegiatan-rutin', element: <KesiswaanKegiatanRutin /> },
+      { path: '/kesiswaan/prestasi', element: <KesiswaanPrestasi /> },
 
       // Sarpras
       { path: '/sarpras', element: <Sarpras /> },
