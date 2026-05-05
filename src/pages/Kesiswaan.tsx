@@ -3,7 +3,7 @@ import { ArrowRight, Sparkles, Trophy } from 'lucide-react'
 import { Container } from '../components/Container'
 import { PageHero } from '../components/PageHero'
 import { TONE_STYLES } from '../data/menu'
-import { EKSKUL } from '../data/ekskul'
+import { useEkskul } from '../lib/useEkskul'
 
 const TONE = 'teal' as const
 
@@ -24,6 +24,7 @@ const SUBMENU = [
 
 export function Kesiswaan() {
   const t = TONE_STYLES[TONE]
+  const { items: ekskul } = useEkskul()
   return (
     <>
       <PageHero
@@ -73,14 +74,14 @@ export function Kesiswaan() {
               Setiap siswa wajib mengikuti minimal satu ekstrakurikuler.
             </p>
             <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {EKSKUL.slice(0, 8).map((e) => (
+              {ekskul.slice(0, 8).map((e) => (
                 <div
                   key={e.slug}
                   className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                 >
                   <div className="aspect-[4/3] overflow-hidden bg-gradient-to-br from-teal-50 to-teal-100">
                     <img
-                      src={e.image}
+                      src={e.image_url ?? ''}
                       alt={e.name}
                       className="h-full w-full object-cover"
                       loading="lazy"

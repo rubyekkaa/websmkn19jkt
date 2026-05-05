@@ -42,6 +42,10 @@ import { AdminMoU } from './pages/admin/MoU'
 import { AdminMoUForm } from './pages/admin/MoUForm'
 import { AdminAgenda } from './pages/admin/Agenda'
 import { AdminAgendaForm } from './pages/admin/AgendaForm'
+import { AdminEkskul } from './pages/admin/Ekskul'
+import { AdminEkskulForm } from './pages/admin/EkskulForm'
+import { AdminJurusan } from './pages/admin/Jurusan'
+import { AdminJurusanForm } from './pages/admin/JurusanForm'
 
 const routes: RouteObject[] = [
   {
@@ -146,6 +150,12 @@ const routes: RouteObject[] = [
       { path: 'mou', element: <AdminMoU /> },
       { path: 'mou/new', element: <AdminMoUForm /> },
       { path: 'mou/:id/edit', element: <AdminMoUForm /> },
+      { path: 'ekskul', element: <AdminEkskul /> },
+      { path: 'ekskul/new', element: <AdminEkskulForm /> },
+      { path: 'ekskul/:id/edit', element: <AdminEkskulForm /> },
+      { path: 'jurusan', element: <AdminJurusan /> },
+      { path: 'jurusan/new', element: <AdminJurusanForm /> },
+      { path: 'jurusan/:id/edit', element: <AdminJurusanForm /> },
       { path: 'agenda', element: <AdminAgenda /> },
       { path: 'agenda/new', element: <AdminAgendaForm /> },
       { path: 'agenda/:id/edit', element: <AdminAgendaForm /> },
