@@ -1,10 +1,23 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, GraduationCap, Sparkles, Users } from 'lucide-react'
+import {
+  ArrowRight,
+  GraduationCap,
+  Sparkles,
+  Users,
+  BookOpen,
+  Calendar,
+  Handshake,
+  Building2,
+  Trophy,
+  FlaskConical,
+  Camera,
+  Newspaper,
+} from 'lucide-react'
 import { Container } from '../components/Container'
-import { SectionHeader } from '../components/SectionHeader'
 import { JURUSAN } from '../data/jurusan'
 import { EKSKUL } from '../data/ekskul'
+import { TONE_STYLES } from '../data/menu'
 import { supabase, isSupabaseConfigured } from '../lib/supabase'
 import type { Post } from '../types'
 
@@ -66,7 +79,7 @@ export function Home() {
 
   return (
     <>
-      {/* Hero */}
+      {/* Hero slider */}
       <section className="relative isolate overflow-hidden">
         <div className="absolute inset-0 -z-10">
           {SLIDES.map((s, i) => (
@@ -100,7 +113,7 @@ export function Home() {
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
-                  to="/jurusan"
+                  to="/kurikulum/jurusan"
                   className="inline-flex items-center gap-2 rounded-full bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-900/30 transition hover:bg-brand-400"
                 >
                   Lihat Jurusan
@@ -131,7 +144,7 @@ export function Home() {
         </Container>
       </section>
 
-      {/* Stats / quick value */}
+      {/* Stats */}
       <section className="border-b border-gray-100 bg-white">
         <Container>
           <div className="grid gap-8 py-12 sm:grid-cols-3">
@@ -168,135 +181,234 @@ export function Home() {
         </Container>
       </section>
 
-      {/* Berita */}
-      <section className="bg-gray-50 py-20">
-        <Container>
-          <SectionHeader
-            eyebrow="Berita"
-            title="Kabar Terbaru"
-            subtitle="Kegiatan dan informasi terkini SMKN 19 Jakarta."
+      {/* === Section card: Kurikulum (purple) === */}
+      <SoftSection
+        tone="purple"
+        eyebrow="Kurikulum"
+        title="Program Keahlian & Agenda Akademik"
+        subtitle="Empat jurusan unggulan berbasis link & match dengan dunia industri, plus agenda akademik yang terstruktur."
+        ctaTo="/kurikulum"
+        ctaLabel="Lihat Kurikulum"
+      >
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {JURUSAN.map((j) => (
+            <Link
+              key={j.slug}
+              to={`/kurikulum/jurusan/${j.slug}`}
+              className="group overflow-hidden rounded-2xl border border-purple-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-purple-300 hover:shadow-md"
+            >
+              <div className="aspect-[4/3] overflow-hidden bg-gray-100">
+                <img
+                  src={j.image}
+                  alt={j.name}
+                  className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                  loading="lazy"
+                />
+              </div>
+              <div className="p-4">
+                <p className="text-xs font-semibold uppercase tracking-wider text-purple-700">
+                  {j.short}
+                </p>
+                <h3 className="mt-1 font-display text-sm font-semibold text-gray-900">
+                  {j.name}
+                </h3>
+              </div>
+            </Link>
+          ))}
+        </div>
+        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          <FeatureLink
+            tone="purple"
+            to="/kurikulum/jurusan"
+            icon={BookOpen}
+            title="Detail Jurusan"
+            desc="Kompetensi tiap program keahlian"
           />
-          <div className="mt-10">
-            {postsLoading ? (
-              <div className="grid gap-6 md:grid-cols-3">
-                {[1, 2, 3].map((i) => (
-                  <div
-                    key={i}
-                    className="h-72 animate-pulse rounded-2xl bg-gray-200"
-                  />
-                ))}
+          <FeatureLink
+            tone="purple"
+            to="/kurikulum/agenda"
+            icon={Calendar}
+            title="Agenda Akademik"
+            desc="Kalender pendidikan dan jadwal ujian"
+          />
+        </div>
+      </SoftSection>
+
+      {/* === Section card: Humas/DUDI (amber) === */}
+      <SoftSection
+        tone="amber"
+        eyebrow="Humas / DUDI"
+        title="Kerja Sama dengan Dunia Industri"
+        subtitle="Magang, kelas industri, dan kunjungan langsung ke perusahaan mitra membentuk lulusan yang siap kerja."
+        ctaTo="/humas-dudi"
+        ctaLabel="Lihat Humas/DUDI"
+      >
+        <div className="grid gap-5 sm:grid-cols-3">
+          <FeatureCard
+            tone="amber"
+            to="/humas-dudi/mou"
+            icon={Handshake}
+            title="MoU & Kerja Sama"
+            desc="Daftar perusahaan mitra industri yang telah bekerja sama dengan kami."
+          />
+          <FeatureCard
+            tone="amber"
+            to="/humas-dudi/kunjungan-industri"
+            icon={Building2}
+            title="Kunjungan Industri"
+            desc="Galeri kunjungan siswa ke perusahaan partner — belajar dari praktisi."
+          />
+          <FeatureCard
+            tone="amber"
+            to="/humas-dudi/kelas-industri"
+            icon={GraduationCap}
+            title="Kelas Industri"
+            desc="Galeri kelas dengan guru tamu praktisi industri & workshop."
+          />
+        </div>
+      </SoftSection>
+
+      {/* === Section card: Kesiswaan (teal) === */}
+      <SoftSection
+        tone="teal"
+        eyebrow="Kesiswaan"
+        title="Pengembangan Karakter & Bakat"
+        subtitle="Wadah siswa mengasah minat, bakat, dan karakter melalui ekstrakurikuler dan kegiatan rutin sekolah."
+        ctaTo="/kesiswaan"
+        ctaLabel="Lihat Kesiswaan"
+      >
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {EKSKUL.slice(0, 8).map((e) => (
+            <div
+              key={e.slug}
+              className="overflow-hidden rounded-2xl border border-teal-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+            >
+              <div className="aspect-[4/3] overflow-hidden bg-gradient-to-br from-teal-50 to-teal-100">
+                <img
+                  src={e.image}
+                  alt={e.name}
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                />
               </div>
-            ) : latestPosts.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-gray-300 bg-white px-6 py-16 text-center text-gray-500">
-                Belum ada berita yang dipublikasikan.
-                {!isSupabaseConfigured && (
-                  <span className="mt-2 block text-xs text-gray-400">
-                    (Supabase belum dikonfigurasi — atur di file{' '}
-                    <code>.env.local</code>)
-                  </span>
-                )}
+              <div className="p-4">
+                <h3 className="font-display text-sm font-semibold text-gray-900">
+                  {e.name}
+                </h3>
               </div>
-            ) : (
-              <div className="grid gap-6 md:grid-cols-3">
-                {latestPosts.map((p) => (
-                  <PostCard key={p.id} post={p} />
-                ))}
-              </div>
+            </div>
+          ))}
+        </div>
+        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          <FeatureLink
+            tone="teal"
+            to="/kesiswaan/ekstrakurikuler"
+            icon={Trophy}
+            title="Ekstrakurikuler"
+            desc="8+ ekskul minat & bakat"
+          />
+          <FeatureLink
+            tone="teal"
+            to="/kesiswaan/kegiatan-rutin"
+            icon={Sparkles}
+            title="Kegiatan Rutin"
+            desc="Galeri acara siswa SMKN 19"
+          />
+        </div>
+      </SoftSection>
+
+      {/* === Section card: Sarpras (sky) === */}
+      <SoftSection
+        tone="sky"
+        eyebrow="Sarpras"
+        title="Fasilitas Belajar & Teaching Factory"
+        subtitle="Dari laboratorium komputer sampai teaching factory — fasilitas modern mendukung praktik nyata di tiap jurusan."
+        ctaTo="/sarpras"
+        ctaLabel="Lihat Semua Fasilitas"
+      >
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            { to: '/sarpras/lab', icon: FlaskConical, title: 'Laboratorium' },
+            { to: '/sarpras/kelas', icon: BookOpen, title: 'Ruang Kelas' },
+            { to: '/sarpras/studio', icon: Camera, title: 'Studio' },
+            {
+              to: '/sarpras/tefa-perfilman',
+              icon: Sparkles,
+              title: 'TeFa Perfilman',
+            },
+            {
+              to: '/sarpras/tefa-perkantoran',
+              icon: Building2,
+              title: 'TeFa Perkantoran',
+            },
+            {
+              to: '/sarpras/tefa-bisnis-retail',
+              icon: Trophy,
+              title: 'TeFa Bisnis Retail',
+            },
+            {
+              to: '/sarpras/tefa-akuntansi',
+              icon: GraduationCap,
+              title: 'TeFa Akuntansi',
+            },
+          ].map((s) => (
+            <Link
+              key={s.to}
+              to={s.to}
+              className="group flex flex-col items-start gap-3 rounded-2xl border border-sky-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-sky-300 hover:shadow-md"
+            >
+              <span className="grid h-10 w-10 place-items-center rounded-xl bg-sky-100 text-sky-700">
+                <s.icon className="h-5 w-5" />
+              </span>
+              <p className="font-display text-sm font-semibold text-gray-900">
+                {s.title}
+              </p>
+              <span className="inline-flex items-center gap-1 text-xs font-semibold text-sky-700">
+                Galeri{' '}
+                <ArrowRight className="h-3 w-3 transition group-hover:translate-x-0.5" />
+              </span>
+            </Link>
+          ))}
+        </div>
+      </SoftSection>
+
+      {/* === Section card: Berita (gray) === */}
+      <SoftSection
+        tone="gray"
+        eyebrow="Berita"
+        title="Kabar Terbaru"
+        subtitle="Kegiatan dan informasi terkini SMKN 19 Jakarta."
+        ctaTo="/berita"
+        ctaLabel="Lihat Semua Berita"
+      >
+        {postsLoading ? (
+          <div className="grid gap-6 md:grid-cols-3">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="h-72 animate-pulse rounded-2xl bg-gray-200"
+              />
+            ))}
+          </div>
+        ) : latestPosts.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-gray-300 bg-white px-6 py-16 text-center text-gray-500">
+            <Newspaper className="mx-auto mb-3 h-10 w-10 text-gray-300" />
+            Belum ada berita yang dipublikasikan.
+            {!isSupabaseConfigured && (
+              <span className="mt-2 block text-xs text-gray-400">
+                (Supabase belum dikonfigurasi — atur di file{' '}
+                <code>.env.local</code>)
+              </span>
             )}
           </div>
-          <div className="mt-10 flex justify-center">
-            <Link
-              to="/berita"
-              className="inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-5 py-2 text-sm font-medium text-gray-700 transition hover:border-brand-500 hover:text-brand-600"
-            >
-              Lihat semua berita <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </Container>
-      </section>
-
-      {/* Jurusan */}
-      <section className="py-20">
-        <Container>
-          <SectionHeader
-            eyebrow="Jurusan"
-            title="Program Keahlian"
-            subtitle="Kenali jurusan dan kompetensi unggulan kami."
-          />
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {JURUSAN.map((j) => (
-              <Link
-                key={j.slug}
-                to={`/jurusan/${j.slug}`}
-                className="group overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-md"
-              >
-                <div className="aspect-[4/3] overflow-hidden bg-gray-100">
-                  <img
-                    src={j.image}
-                    alt={j.name}
-                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                </div>
-                <div className="p-5">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-brand-600">
-                    {j.short}
-                  </p>
-                  <h3 className="mt-1 font-display text-base font-semibold text-gray-900">
-                    {j.name}
-                  </h3>
-                  <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-brand-600">
-                    Baca selengkapnya <ArrowRight className="h-3.5 w-3.5" />
-                  </span>
-                </div>
-              </Link>
+        ) : (
+          <div className="grid gap-6 md:grid-cols-3">
+            {latestPosts.map((p) => (
+              <PostCard key={p.id} post={p} />
             ))}
           </div>
-        </Container>
-      </section>
-
-      {/* Ekstrakurikuler */}
-      <section className="bg-gray-50 py-20">
-        <Container>
-          <SectionHeader
-            eyebrow="Ekstrakurikuler"
-            title="Kegiatan Pengembangan Diri"
-            subtitle="Wadah siswa mengasah minat dan bakat."
-          />
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {EKSKUL.slice(0, 6).map((e) => (
-              <div
-                key={e.slug}
-                className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm"
-              >
-                <div className="flex aspect-[16/10] items-center justify-center overflow-hidden bg-gradient-to-br from-brand-50 to-brand-100">
-                  <img
-                    src={e.image}
-                    alt={e.name}
-                    className="h-full w-full object-cover"
-                    loading="lazy"
-                  />
-                </div>
-                <div className="p-5">
-                  <h3 className="font-display text-base font-semibold text-gray-900">
-                    {e.name}
-                  </h3>
-                  <p className="mt-1 text-sm text-gray-600">{e.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="mt-10 flex justify-center">
-            <Link
-              to="/ekstrakurikuler"
-              className="inline-flex items-center gap-2 rounded-full border border-gray-300 bg-white px-5 py-2 text-sm font-medium text-gray-700 transition hover:border-brand-500 hover:text-brand-600"
-            >
-              Lihat semua ekstrakurikuler{' '}
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </Container>
-      </section>
+        )}
+      </SoftSection>
 
       {/* CTA */}
       <section className="py-20">
@@ -331,6 +443,145 @@ export function Home() {
         </Container>
       </section>
     </>
+  )
+}
+
+// === Reusable section card with soft pastel background ===
+
+type Tone = keyof typeof TONE_STYLES
+
+function SoftSection({
+  tone,
+  eyebrow,
+  title,
+  subtitle,
+  ctaTo,
+  ctaLabel,
+  children,
+}: {
+  tone: Tone
+  eyebrow: string
+  title: string
+  subtitle?: string
+  ctaTo: string
+  ctaLabel: string
+  children: React.ReactNode
+}) {
+  const t = TONE_STYLES[tone]
+  return (
+    <section className="py-10 sm:py-14">
+      <Container>
+        <div
+          className={`relative overflow-hidden rounded-3xl border ${t.border} ${t.bg} p-7 shadow-sm sm:p-10`}
+        >
+          <div className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-white/40 blur-3xl" />
+          <div className="pointer-events-none absolute -left-16 -bottom-20 h-56 w-56 rounded-full bg-white/30 blur-3xl" />
+          <div className="relative">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div className="max-w-2xl">
+                <p
+                  className={`text-xs font-semibold uppercase tracking-[0.18em] ${t.textSubtle}`}
+                >
+                  {eyebrow}
+                </p>
+                <h2
+                  className={`mt-2 font-display text-2xl font-bold sm:text-3xl ${t.text}`}
+                >
+                  {title}
+                </h2>
+                {subtitle && (
+                  <p
+                    className={`mt-2 text-sm sm:text-base ${t.textSubtle}`}
+                  >
+                    {subtitle}
+                  </p>
+                )}
+              </div>
+              <Link
+                to={ctaTo}
+                className={`inline-flex flex-none items-center gap-1 rounded-full px-4 py-2 text-sm font-semibold ${t.accent} transition`}
+              >
+                {ctaLabel} <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+            <div className="mt-8">{children}</div>
+          </div>
+        </div>
+      </Container>
+    </section>
+  )
+}
+
+function FeatureCard({
+  tone,
+  to,
+  icon: Icon,
+  title,
+  desc,
+}: {
+  tone: Tone
+  to: string
+  icon: React.ComponentType<{ className?: string }>
+  title: string
+  desc: string
+}) {
+  const t = TONE_STYLES[tone]
+  return (
+    <Link
+      to={to}
+      className={`group block rounded-2xl border ${t.border} bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md`}
+    >
+      <span
+        className={`grid h-11 w-11 place-items-center rounded-xl ${t.chip}`}
+      >
+        <Icon className="h-5 w-5" />
+      </span>
+      <h3 className="mt-4 font-display text-base font-semibold text-gray-900">
+        {title}
+      </h3>
+      <p className="mt-1 text-sm text-gray-600">{desc}</p>
+      <span
+        className={`mt-4 inline-flex items-center gap-1 text-sm font-semibold ${t.text}`}
+      >
+        Selengkapnya{' '}
+        <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+      </span>
+    </Link>
+  )
+}
+
+function FeatureLink({
+  tone,
+  to,
+  icon: Icon,
+  title,
+  desc,
+}: {
+  tone: Tone
+  to: string
+  icon: React.ComponentType<{ className?: string }>
+  title: string
+  desc: string
+}) {
+  const t = TONE_STYLES[tone]
+  return (
+    <Link
+      to={to}
+      className={`group flex items-center gap-4 rounded-2xl border ${t.border} bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md`}
+    >
+      <span className={`grid h-11 w-11 flex-none place-items-center rounded-xl ${t.chip}`}>
+        <Icon className="h-5 w-5" />
+      </span>
+      <div className="flex-1">
+        <p className="font-display text-sm font-semibold text-gray-900">
+          {title}
+        </p>
+        <p className="text-xs text-gray-500">{desc}</p>
+      </div>
+      <ArrowRight
+        className={`h-4 w-4 ${t.textSubtle} transition group-hover:translate-x-0.5`}
+      />
+    </Link>
   )
 }
 
