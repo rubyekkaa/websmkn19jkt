@@ -45,6 +45,10 @@ export function AdminGalleryDetail() {
   const [savingMeta, setSavingMeta] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState<{ done: number; total: number } | null>(null)
+  // True setelah user mengetik manual di field slug. Selama belum disentuh,
+  // slug auto-mengikuti nama (di-slugify). Sekali user mengedit slug, kita
+  // berhenti auto-generate.
+  const [slugTouched, setSlugTouched] = useState(false)
 
   // form state for collection metadata
   const [name, setName] = useState('')
@@ -265,8 +269,10 @@ export function AdminGalleryDetail() {
     const a = { ...p, sort_order: swapWith.sort_order }
     const b = { ...swapWith, sort_order: p.sort_order }
     const next = [...photos]
-    next[idx] = direction === -1 ? a : b
-    next[idx + direction] = direction === -1 ? b : a
+    // p (a) pindah ke posisi swapWith, swapWith (b) pindah ke posisi p —
+    // berlaku untuk move up & move down.
+    next[idx] = b
+    next[idx + direction] = a
     setPhotos(next)
     // Persist swap; tidak harus menunggu kedua selesai untuk UX cepat
     await Promise.all([
@@ -331,8 +337,10 @@ export function AdminGalleryDetail() {
                 <input
                   value={name}
                   onChange={(e) => {
-                    setName(e.target.value)
-                    if (isNew && !collSlug) setCollSlug(slugify(e.target.value))
+                    const v = e.target.value
+                    setName(v)
+                    // Auto-isi slug selama user belum manually edit field slug.
+                    if (isNew && !slugTouched) setCollSlug(slugify(v))
                   }}
                   required
                   className="mt-1 w-full rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
@@ -345,7 +353,10 @@ export function AdminGalleryDetail() {
                 </label>
                 <input
                   value={collSlug}
-                  onChange={(e) => setCollSlug(slugify(e.target.value))}
+                  onChange={(e) => {
+                    setSlugTouched(true)
+                    setCollSlug(slugify(e.target.value))
+                  }}
                   placeholder="kunjungan-industri"
                   className="mt-1 w-full rounded-lg border-gray-300 text-sm font-mono focus:border-brand-500 focus:ring-brand-500"
                 />
