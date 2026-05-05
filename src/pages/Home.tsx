@@ -194,12 +194,14 @@ export function Home() {
               className="group overflow-hidden rounded-2xl border border-purple-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-purple-300 hover:shadow-md"
             >
               <div className="aspect-[4/3] overflow-hidden bg-gray-100">
-                <img
-                  src={j.image_url ?? ''}
-                  alt={j.name}
-                  className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                  loading="lazy"
-                />
+                {j.image_url && (
+                  <img
+                    src={j.image_url}
+                    alt={j.name}
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                )}
               </div>
               <div className="p-4">
                 <p className="text-xs font-semibold uppercase tracking-wider text-purple-700">
@@ -280,12 +282,14 @@ export function Home() {
               className="overflow-hidden rounded-2xl border border-teal-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
             >
               <div className="aspect-[4/3] overflow-hidden bg-gradient-to-br from-teal-50 to-teal-100">
-                <img
-                  src={e.image_url ?? ''}
-                  alt={e.name}
-                  className="h-full w-full object-cover"
-                  loading="lazy"
-                />
+                {e.image_url && (
+                  <img
+                    src={e.image_url}
+                    alt={e.name}
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                  />
+                )}
               </div>
               <div className="p-4">
                 <h3 className="font-display text-sm font-semibold text-gray-900">

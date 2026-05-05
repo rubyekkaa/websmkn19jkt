@@ -9,15 +9,18 @@ export function Jurusan() {
   const { items, loading } = useJurusan()
 
   if (slug) {
-    if (loading && items.length === 0) {
-      return (
-        <Container>
-          <p className="py-32 text-center text-sm text-gray-500">Memuat…</p>
-        </Container>
-      )
-    }
     const j = items.find((x) => x.slug === slug)
     if (!j) {
+      // Selama loading masih jalan, tunggu — slug yang baru ditambah admin
+      // belum tentu ada di FALLBACK statis. Setelah loading selesai dan slug
+      // tetap tidak ketemu, baru tampilkan "tidak ditemukan".
+      if (loading) {
+        return (
+          <Container>
+            <p className="py-32 text-center text-sm text-gray-500">Memuat…</p>
+          </Container>
+        )
+      }
       return (
         <Container>
           <div className="py-32 text-center">

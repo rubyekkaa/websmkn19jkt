@@ -80,12 +80,14 @@ export function Kesiswaan() {
                   className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
                 >
                   <div className="aspect-[4/3] overflow-hidden bg-gradient-to-br from-teal-50 to-teal-100">
-                    <img
-                      src={e.image_url ?? ''}
-                      alt={e.name}
-                      className="h-full w-full object-cover"
-                      loading="lazy"
-                    />
+                    {e.image_url && (
+                      <img
+                        src={e.image_url}
+                        alt={e.name}
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                    )}
                   </div>
                   <div className="p-4">
                     <h4 className="font-display text-sm font-semibold text-gray-900">

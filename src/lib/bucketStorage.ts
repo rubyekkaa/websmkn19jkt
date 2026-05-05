@@ -25,7 +25,7 @@ export async function cleanupBucketFiles(
     .map((u) => extractStoragePathFor(bucket, u ?? null))
     .filter((p): p is string => Boolean(p))
   if (paths.length === 0) return
-  await supabase.storage.from(bucket).remove(paths)
+  await removeBucketPaths(bucket, paths)
 }
 
 /**
