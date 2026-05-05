@@ -9,6 +9,7 @@ import {
   Trash2,
 } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
+import { cleanupMoUFiles } from '../../lib/mouStorage'
 import type { MoUPartner } from '../../types'
 
 function fmt(d: string | null) {
@@ -56,6 +57,9 @@ export function AdminMoU() {
       alert(err.message)
       return
     }
+    // Best-effort cleanup file logo + dokumen yang sebelumnya di-upload ke
+    // bucket mou-files. URL eksternal (non-bucket) di-skip otomatis.
+    await cleanupMoUFiles(m.partner_logo_url, m.document_url)
     void load()
   }
 

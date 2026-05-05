@@ -12,22 +12,17 @@ import {
 } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../lib/auth'
+import {
+  MOU_BUCKET as BUCKET,
+  cleanupMoUFiles,
+  extractStoragePath,
+} from '../../lib/mouStorage'
 import type { MoUPartner, MoUStatus } from '../../types'
-
-const BUCKET = 'mou-files'
 
 const STATUS_OPTIONS: { value: MoUStatus; label: string }[] = [
   { value: 'aktif', label: 'Aktif' },
   { value: 'berakhir', label: 'Berakhir' },
 ]
-
-function extractStoragePath(publicUrl: string | null): string | null {
-  if (!publicUrl) return null
-  const marker = `/storage/v1/object/public/${BUCKET}/`
-  const idx = publicUrl.indexOf(marker)
-  if (idx === -1) return null
-  return decodeURIComponent(publicUrl.slice(idx + marker.length))
-}
 
 export function AdminMoUForm() {
   const { id } = useParams<{ id: string }>()
@@ -208,6 +203,9 @@ export function AdminMoUForm() {
       setError(err.message)
       return
     }
+    // Best-effort cleanup file logo + dokumen yang sebelumnya di-upload
+    // ke bucket mou-files. URL eksternal (non-bucket) di-skip otomatis.
+    await cleanupMoUFiles(logoUrl, documentUrl)
     navigate('/admin/mou')
   }
 
