@@ -107,9 +107,15 @@ export function AdminMoUForm() {
     if (!file) return
     setError(null)
     setUploadingLogo(true)
+    // Catat path lama SEBELUM state ditimpa, supaya bisa dibersihkan
+    // setelah upload baru sukses (kalau lama dari bucket kita).
+    const oldPath = extractStoragePath(logoUrl)
     try {
       const url = await uploadFile(file, 'logos')
       setLogoUrl(url)
+      if (oldPath) {
+        await supabase.storage.from(BUCKET).remove([oldPath])
+      }
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
       setError(`Gagal upload logo: ${msg}`)
@@ -123,9 +129,13 @@ export function AdminMoUForm() {
     if (!file) return
     setError(null)
     setUploadingDoc(true)
+    const oldPath = extractStoragePath(documentUrl)
     try {
       const url = await uploadFile(file, 'documents')
       setDocumentUrl(url)
+      if (oldPath) {
+        await supabase.storage.from(BUCKET).remove([oldPath])
+      }
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
       setError(`Gagal upload dokumen: ${msg}`)
