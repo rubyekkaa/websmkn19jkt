@@ -111,7 +111,9 @@ export function AdminGalleryDetail() {
     setSavingMeta(true)
     try {
       if (!name.trim()) throw new Error('Nama koleksi wajib diisi.')
-      const finalSlug = (collSlug.trim() || slugify(name)) || ''
+      // Slugify ulang saat submit — input slug nyimpan raw text supaya user
+      // bisa ngetik hyphen tanpa kena trim, tapi yang masuk DB tetap clean.
+      const finalSlug = slugify(collSlug.trim() || name) || ''
       if (!finalSlug) throw new Error('Slug tidak valid.')
       if (finalSlug === NEW_SLUG_SENTINEL) {
         throw new Error(
@@ -360,8 +362,9 @@ export function AdminGalleryDetail() {
                   value={collSlug}
                   onChange={(e) => {
                     setSlugTouched(true)
-                    setCollSlug(slugify(e.target.value))
+                    setCollSlug(e.target.value)
                   }}
+                  onBlur={(e) => setCollSlug(slugify(e.target.value))}
                   placeholder="kunjungan-industri"
                   className="mt-1 w-full rounded-lg border-gray-300 text-sm font-mono focus:border-brand-500 focus:ring-brand-500"
                 />
