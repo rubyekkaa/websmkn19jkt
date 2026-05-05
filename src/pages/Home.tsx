@@ -181,6 +181,44 @@ export function Home() {
         </Container>
       </section>
 
+      {/* === Section card: Berita (gray) === */}
+      <SoftSection
+        tone="gray"
+        eyebrow="Berita"
+        title="Kabar Terbaru"
+        subtitle="Kegiatan dan informasi terkini SMKN 19 Jakarta."
+        ctaTo="/berita"
+        ctaLabel="Lihat Semua Berita"
+      >
+        {postsLoading ? (
+          <div className="grid gap-6 md:grid-cols-3">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="h-72 animate-pulse rounded-2xl bg-gray-200"
+              />
+            ))}
+          </div>
+        ) : latestPosts.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-gray-300 bg-white px-6 py-16 text-center text-gray-500">
+            <Newspaper className="mx-auto mb-3 h-10 w-10 text-gray-300" />
+            Belum ada berita yang dipublikasikan.
+            {!isSupabaseConfigured && (
+              <span className="mt-2 block text-xs text-gray-400">
+                (Supabase belum dikonfigurasi — atur di file{' '}
+                <code>.env.local</code>)
+              </span>
+            )}
+          </div>
+        ) : (
+          <div className="grid gap-6 md:grid-cols-3">
+            {latestPosts.map((p) => (
+              <PostCard key={p.id} post={p} />
+            ))}
+          </div>
+        )}
+      </SoftSection>
+
       {/* === Section card: Kurikulum (purple) === */}
       <SoftSection
         tone="purple"
@@ -370,44 +408,6 @@ export function Home() {
             </Link>
           ))}
         </div>
-      </SoftSection>
-
-      {/* === Section card: Berita (gray) === */}
-      <SoftSection
-        tone="gray"
-        eyebrow="Berita"
-        title="Kabar Terbaru"
-        subtitle="Kegiatan dan informasi terkini SMKN 19 Jakarta."
-        ctaTo="/berita"
-        ctaLabel="Lihat Semua Berita"
-      >
-        {postsLoading ? (
-          <div className="grid gap-6 md:grid-cols-3">
-            {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="h-72 animate-pulse rounded-2xl bg-gray-200"
-              />
-            ))}
-          </div>
-        ) : latestPosts.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-gray-300 bg-white px-6 py-16 text-center text-gray-500">
-            <Newspaper className="mx-auto mb-3 h-10 w-10 text-gray-300" />
-            Belum ada berita yang dipublikasikan.
-            {!isSupabaseConfigured && (
-              <span className="mt-2 block text-xs text-gray-400">
-                (Supabase belum dikonfigurasi — atur di file{' '}
-                <code>.env.local</code>)
-              </span>
-            )}
-          </div>
-        ) : (
-          <div className="grid gap-6 md:grid-cols-3">
-            {latestPosts.map((p) => (
-              <PostCard key={p.id} post={p} />
-            ))}
-          </div>
-        )}
       </SoftSection>
 
       {/* CTA */}

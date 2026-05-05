@@ -37,6 +37,10 @@ import { AdminGuruForm } from './pages/admin/GuruForm'
 import { AdminUsers } from './pages/admin/Users'
 import { AdminGalleries } from './pages/admin/Galleries'
 import { AdminGalleryDetail } from './pages/admin/GalleryDetail'
+import { AdminMoU } from './pages/admin/MoU'
+import { AdminMoUForm } from './pages/admin/MoUForm'
+import { AdminAgenda } from './pages/admin/Agenda'
+import { AdminAgendaForm } from './pages/admin/AgendaForm'
 
 const routes: RouteObject[] = [
   {
@@ -137,6 +141,12 @@ const routes: RouteObject[] = [
       },
       { path: 'galleries', element: <AdminGalleries /> },
       { path: 'galleries/:slug', element: <AdminGalleryDetail /> },
+      { path: 'mou', element: <AdminMoU /> },
+      { path: 'mou/new', element: <AdminMoUForm /> },
+      { path: 'mou/:id/edit', element: <AdminMoUForm /> },
+      { path: 'agenda', element: <AdminAgenda /> },
+      { path: 'agenda/new', element: <AdminAgendaForm /> },
+      { path: 'agenda/:id/edit', element: <AdminAgendaForm /> },
     ],
   },
 ]
