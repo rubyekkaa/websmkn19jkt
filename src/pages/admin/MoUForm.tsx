@@ -19,6 +19,18 @@ import {
 } from '../../lib/mouStorage'
 import type { MoUPartner, MoUStatus } from '../../types'
 
+/**
+ * Hapus paths dari bucket MoU. Best-effort: error di-log tapi tidak
+ * dilempar, supaya kegagalan cleanup tidak menghalangi flow utama.
+ */
+async function removeStoragePaths(paths: string[]): Promise<void> {
+  if (paths.length === 0) return
+  const { error } = await supabase.storage.from(BUCKET).remove(paths)
+  if (error) {
+    console.warn('[MoUForm] gagal cleanup storage', error)
+  }
+}
+
 const STATUS_OPTIONS: { value: MoUStatus; label: string }[] = [
   { value: 'aktif', label: 'Aktif' },
   { value: 'berakhir', label: 'Berakhir' },
@@ -32,6 +44,15 @@ export function AdminMoUForm() {
 
   const logoInputRef = useRef<HTMLInputElement>(null)
   const docInputRef = useRef<HTMLInputElement>(null)
+
+  // URL asli dari DB (atau '' kalau new). Tidak boleh dihapus dari storage
+  // sampai save sukses, supaya record DB tidak menunjuk file yang hilang.
+  const originalLogoUrlRef = useRef<string>('')
+  const originalDocumentUrlRef = useRef<string>('')
+
+  // Path-path yang di-upload selama session ini (belum pernah masuk DB).
+  // Aman dihapus saat tidak lagi jadi nilai final.
+  const sessionUploadsRef = useRef<Set<string>>(new Set())
 
   const [loading, setLoading] = useState(!isNew)
   const [saving, setSaving] = useState(false)
@@ -79,6 +100,8 @@ export function AdminMoUForm() {
       setStatus((m.status ?? 'aktif') as MoUStatus)
       setLogoUrl(m.partner_logo_url ?? '')
       setDocumentUrl(m.document_url ?? '')
+      originalLogoUrlRef.current = m.partner_logo_url ?? ''
+      originalDocumentUrlRef.current = m.document_url ?? ''
       setLoading(false)
     }
     void load()
@@ -107,15 +130,11 @@ export function AdminMoUForm() {
     if (!file) return
     setError(null)
     setUploadingLogo(true)
-    // Catat path lama SEBELUM state ditimpa, supaya bisa dibersihkan
-    // setelah upload baru sukses (kalau lama dari bucket kita).
-    const oldPath = extractStoragePath(logoUrl)
     try {
       const url = await uploadFile(file, 'logos')
+      const newPath = extractStoragePath(url)
+      if (newPath) sessionUploadsRef.current.add(newPath)
       setLogoUrl(url)
-      if (oldPath) {
-        await supabase.storage.from(BUCKET).remove([oldPath])
-      }
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
       setError(`Gagal upload logo: ${msg}`)
@@ -129,13 +148,11 @@ export function AdminMoUForm() {
     if (!file) return
     setError(null)
     setUploadingDoc(true)
-    const oldPath = extractStoragePath(documentUrl)
     try {
       const url = await uploadFile(file, 'documents')
+      const newPath = extractStoragePath(url)
+      if (newPath) sessionUploadsRef.current.add(newPath)
       setDocumentUrl(url)
-      if (oldPath) {
-        await supabase.storage.from(BUCKET).remove([oldPath])
-      }
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
       setError(`Gagal upload dokumen: ${msg}`)
@@ -145,21 +162,15 @@ export function AdminMoUForm() {
     }
   }
 
-  async function clearLogo() {
-    const path = extractStoragePath(logoUrl)
+  // clearLogo/clearDoc hanya update state. File asli (kalau dari DB) tetap
+  // di storage sampai save sukses, supaya record DB tidak menunjuk file
+  // yang sudah hilang kalau user batal save.
+  function clearLogo() {
     setLogoUrl('')
-    if (path) {
-      // best-effort hapus dari storage
-      await supabase.storage.from(BUCKET).remove([path])
-    }
   }
 
-  async function clearDoc() {
-    const path = extractStoragePath(documentUrl)
+  function clearDoc() {
     setDocumentUrl('')
-    if (path) {
-      await supabase.storage.from(BUCKET).remove([path])
-    }
   }
 
   async function onSubmit(e: React.FormEvent) {
@@ -170,13 +181,16 @@ export function AdminMoUForm() {
       if (!partnerName.trim()) throw new Error('Nama mitra wajib diisi.')
       if (!signedAt) throw new Error('Tanggal tandatangan wajib diisi.')
 
+      const finalLogoUrl = logoUrl.trim() || null
+      const finalDocumentUrl = documentUrl.trim() || null
+
       const payload = {
         partner_name: partnerName.trim(),
         description: description.trim() || null,
         signed_at: signedAt,
         expires_at: expiresAt || null,
-        partner_logo_url: logoUrl.trim() || null,
-        document_url: documentUrl.trim() || null,
+        partner_logo_url: finalLogoUrl,
+        document_url: finalDocumentUrl,
         status,
         updated_at: new Date().toISOString(),
       }
@@ -193,6 +207,28 @@ export function AdminMoUForm() {
           .eq('id', id)
         if (err) throw err
       }
+
+      // Save sukses — sekarang aman cleanup file storage:
+      // (a) URL asli DB yang sudah diganti / dikosongkan
+      // (b) File yang di-upload selama session tapi tidak jadi nilai final
+      const finalPaths = new Set<string>(
+        [finalLogoUrl, finalDocumentUrl]
+          .map((u) => extractStoragePath(u))
+          .filter((p): p is string => Boolean(p)),
+      )
+      const toRemove = new Set<string>()
+      for (const origUrl of [
+        originalLogoUrlRef.current,
+        originalDocumentUrlRef.current,
+      ]) {
+        const p = extractStoragePath(origUrl)
+        if (p && !finalPaths.has(p)) toRemove.add(p)
+      }
+      for (const p of sessionUploadsRef.current) {
+        if (!finalPaths.has(p)) toRemove.add(p)
+      }
+      await removeStoragePaths(Array.from(toRemove))
+
       navigate('/admin/mou')
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
