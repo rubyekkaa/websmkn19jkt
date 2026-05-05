@@ -1,5 +1,6 @@
 import {
   createBrowserRouter,
+  Navigate,
   RouterProvider,
   type RouteObject,
 } from 'react-router-dom'
@@ -15,6 +16,16 @@ import { Berita } from './pages/Berita'
 import { BeritaDetail } from './pages/BeritaDetail'
 import { Kontak } from './pages/Kontak'
 import { NotFound } from './pages/NotFound'
+import { Kurikulum } from './pages/Kurikulum'
+import { KurikulumAgenda } from './pages/KurikulumAgenda'
+import { HumasDudi } from './pages/HumasDudi'
+import { HumasDudiMoU } from './pages/HumasDudiMoU'
+import { HumasDudiKunjungan } from './pages/HumasDudiKunjungan'
+import { HumasDudiKelasIndustri } from './pages/HumasDudiKelasIndustri'
+import { Kesiswaan } from './pages/Kesiswaan'
+import { KesiswaanKegiatanRutin } from './pages/KesiswaanKegiatanRutin'
+import { Sarpras } from './pages/Sarpras'
+import { SarprasGallery } from './pages/SarprasGallery'
 import { AdminLogin } from './pages/admin/Login'
 import { AdminDashboard } from './pages/admin/Dashboard'
 import { AdminBeritaList } from './pages/admin/BeritaList'
@@ -31,12 +42,47 @@ const routes: RouteObject[] = [
     children: [
       { path: '/', element: <Home /> },
       { path: '/profil', element: <Profil /> },
-      { path: '/jurusan', element: <Jurusan /> },
-      { path: '/jurusan/:slug', element: <Jurusan /> },
-      { path: '/ekstrakurikuler', element: <Ekstrakurikuler /> },
+
+      // Kurikulum
+      { path: '/kurikulum', element: <Kurikulum /> },
+      { path: '/kurikulum/jurusan', element: <Jurusan /> },
+      { path: '/kurikulum/jurusan/:slug', element: <Jurusan /> },
+      { path: '/kurikulum/agenda', element: <KurikulumAgenda /> },
+
+      // Humas/DUDI
+      { path: '/humas-dudi', element: <HumasDudi /> },
+      { path: '/humas-dudi/mou', element: <HumasDudiMoU /> },
+      { path: '/humas-dudi/kunjungan-industri', element: <HumasDudiKunjungan /> },
+      { path: '/humas-dudi/kelas-industri', element: <HumasDudiKelasIndustri /> },
+
+      // Kesiswaan
+      { path: '/kesiswaan', element: <Kesiswaan /> },
+      { path: '/kesiswaan/ekstrakurikuler', element: <Ekstrakurikuler /> },
+      { path: '/kesiswaan/kegiatan-rutin', element: <KesiswaanKegiatanRutin /> },
+
+      // Sarpras
+      { path: '/sarpras', element: <Sarpras /> },
+      { path: '/sarpras/:sub', element: <SarprasGallery /> },
+
+      // Berita & Kontak
       { path: '/berita', element: <Berita /> },
       { path: '/berita/:slug', element: <BeritaDetail /> },
       { path: '/kontak', element: <Kontak /> },
+
+      // Legacy redirects (keep old links working)
+      {
+        path: '/jurusan',
+        element: <Navigate to="/kurikulum/jurusan" replace />,
+      },
+      {
+        path: '/jurusan/:slug',
+        element: <LegacyJurusanRedirect />,
+      },
+      {
+        path: '/ekstrakurikuler',
+        element: <Navigate to="/kesiswaan/ekstrakurikuler" replace />,
+      },
+
       { path: '*', element: <NotFound /> },
     ],
   },
@@ -90,6 +136,11 @@ const routes: RouteObject[] = [
     ],
   },
 ]
+
+function LegacyJurusanRedirect() {
+  const slug = window.location.pathname.split('/').pop()
+  return <Navigate to={`/kurikulum/jurusan/${slug ?? ''}`} replace />
+}
 
 const router = createBrowserRouter(routes)
 

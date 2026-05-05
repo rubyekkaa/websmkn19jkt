@@ -20,7 +20,7 @@ export function Jurusan() {
               Halaman yang Anda cari tidak ada.
             </p>
             <Link
-              to="/jurusan"
+              to="/kurikulum/jurusan"
               className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-brand-600"
             >
               Kembali ke daftar jurusan
@@ -104,7 +104,7 @@ export function Jurusan() {
                 {JURUSAN.filter((x) => x.slug !== j.slug).map((other) => (
                   <Link
                     key={other.slug}
-                    to={`/jurusan/${other.slug}`}
+                    to={`/kurikulum/jurusan/${other.slug}`}
                     className="group rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition hover:border-brand-300"
                   >
                     <p className="text-xs font-semibold uppercase tracking-wider text-brand-600">
@@ -138,7 +138,7 @@ export function Jurusan() {
           {JURUSAN.map((j) => (
             <Link
               key={j.slug}
-              to={`/jurusan/${j.slug}`}
+              to={`/kurikulum/jurusan/${j.slug}`}
               className="group overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-md"
             >
               <div className="grid md:grid-cols-2">

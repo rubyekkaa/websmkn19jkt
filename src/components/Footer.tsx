@@ -82,8 +82,10 @@ export function Footer() {
               {[
                 ['/', 'Home'],
                 ['/profil', 'Profil'],
-                ['/jurusan', 'Jurusan'],
-                ['/ekstrakurikuler', 'Ekstrakurikuler'],
+                ['/kurikulum', 'Kurikulum'],
+                ['/humas-dudi', 'Humas/DUDI'],
+                ['/kesiswaan', 'Kesiswaan'],
+                ['/sarpras', 'Sarpras'],
                 ['/berita', 'Berita'],
                 ['/kontak', 'Kontak'],
               ].map(([to, label]) => (
@@ -105,10 +107,10 @@ export function Footer() {
             </h3>
             <ul className="mt-4 space-y-2 text-sm">
               {[
-                ['/jurusan/akl', 'Akuntansi (AKL)'],
-                ['/jurusan/bisnis-retail', 'Bisnis Retail'],
-                ['/jurusan/mplb', 'Manajemen Perkantoran'],
-                ['/jurusan/produksi-film', 'Produksi Film'],
+                ['/kurikulum/jurusan/akl', 'Akuntansi (AKL)'],
+                ['/kurikulum/jurusan/bisnis-retail', 'Bisnis Retail'],
+                ['/kurikulum/jurusan/mplb', 'Manajemen Perkantoran'],
+                ['/kurikulum/jurusan/produksi-film', 'Produksi Film'],
               ].map(([to, label]) => (
                 <li key={to}>
                   <Link

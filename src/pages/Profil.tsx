@@ -1,10 +1,24 @@
 import { useEffect, useMemo, useState } from 'react'
+import {
+  Search,
+  Quote,
+  Target,
+  Sparkles,
+  MapPin,
+  Phone,
+  Mail,
+  Globe,
+  Users,
+  GraduationCap,
+  Trophy,
+} from 'lucide-react'
 import { Container } from '../components/Container'
-import { SectionHeader } from '../components/SectionHeader'
+import { PageHero } from '../components/PageHero'
 import { GURU } from '../data/guru'
 import { supabase } from '../lib/supabase'
 import type { TeacherGrup } from '../types'
-import { Search } from 'lucide-react'
+
+const TONE = 'rose' as const
 
 type Person = {
   name: string
@@ -24,6 +38,15 @@ const FALLBACK: Person[] = GURU.map((g, i) => ({
   sort_order: i,
 }))
 
+const MISI = [
+  'Meningkatkan kualitas keimanan, ketaqwaan, dan akhlak mulia.',
+  'Menumbuhkembangkan semangat berinovasi dan berkreasi.',
+  'Menyiapkan murid yang kompeten dan mampu bersaing secara global.',
+  'Meningkatkan profesionalitas dan kompetensi guru berbasis teknologi.',
+  'Mengembangkan pembelajaran berkesadaran, bermakna, dan menyenangkan, sesuai dengan dunia usaha dan industri.',
+  'Mewujudkan sekolah yang berbudaya Adiwiyata.',
+]
+
 export function Profil() {
   const [people, setPeople] = useState<Person[]>(FALLBACK)
   const [q, setQ] = useState('')
@@ -39,10 +62,7 @@ export function Profil() {
         .order('sort_order', { ascending: true })
         .order('name', { ascending: true })
       if (cancelled) return
-      if (error || !data || data.length === 0) {
-        // Tabel teachers belum di-setup → tetap pakai fallback
-        return
-      }
+      if (error || !data || data.length === 0) return
       setPeople(data as Person[])
     }
     void load()
@@ -90,142 +110,249 @@ export function Profil() {
 
   return (
     <>
-      {/* Sambutan */}
-      <section className="bg-white py-20">
-        <Container size="narrow">
-          <div className="text-center">
-            <div className="mx-auto h-28 w-28 overflow-hidden rounded-full border-4 border-brand-100 bg-gray-100">
-              <img
-                src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=400&h=400&q=70"
-                alt="Kepala Sekolah"
-                className="h-full w-full object-cover"
-              />
-            </div>
-            <h1 className="mt-5 font-display text-3xl font-bold text-gray-900 sm:text-4xl">
-              Sambutan Kepala Sekolah
-            </h1>
-            <p className="mt-1 text-sm text-gray-500">Ibu Sri Muljani, S.Pd.</p>
-          </div>
-          <div className="mt-10 space-y-4 text-base leading-relaxed text-gray-700">
-            <p>Assalamualaikum warahmatullahi wabarakatuh,</p>
-            <p>
-              Selamat datang di website resmi SMKN 19 Jakarta. Kami berkomitmen
-              mewujudkan lulusan yang bertaqwa, cerdas, terampil, dan berdaya
-              saing, melalui pembelajaran berbasis proyek, link & match dengan
-              industri, serta lingkungan belajar yang aman dan menyenangkan.
-            </p>
-            <p>
-              Kami mengundang seluruh warga sekolah dan orang tua untuk
-              bersinergi membentuk karakter peserta didik yang berakhlak mulia
-              dan adaptif terhadap perkembangan teknologi.
-            </p>
-            <p>Wassalamualaikum warahmatullahi wabarakatuh.</p>
+      <PageHero
+        eyebrow="Profil"
+        title="Tentang SMKN 19 Jakarta"
+        subtitle="Sekolah Berkarakter & Berprestasi — mencetak generasi siap kerja, kompeten, dan berdaya saing."
+        tone={TONE}
+        breadcrumbs={[{ to: '/', label: 'Home' }, { label: 'Profil' }]}
+      />
+
+      {/* Stats strip */}
+      <section className="border-b border-rose-100 bg-white">
+        <Container>
+          <div className="grid gap-6 py-10 sm:grid-cols-3">
+            {[
+              {
+                icon: GraduationCap,
+                value: '4',
+                label: 'Program Keahlian',
+              },
+              {
+                icon: Users,
+                value: `${totalGuru + totalTU}+`,
+                label: 'Tenaga Pendidik & Kependidikan',
+              },
+              {
+                icon: Trophy,
+                value: '8+',
+                label: 'Ekstrakurikuler Aktif',
+              },
+            ].map((s) => (
+              <div key={s.label} className="flex items-center gap-4">
+                <div className="grid h-12 w-12 flex-none place-items-center rounded-2xl bg-rose-50 text-rose-700">
+                  <s.icon className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="font-display text-2xl font-bold text-gray-900">
+                    {s.value}
+                  </p>
+                  <p className="text-sm text-gray-600">{s.label}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </Container>
       </section>
 
-      {/* Profil sekolah */}
-      <section className="bg-gray-50 py-20">
+      {/* Sambutan Kepala Sekolah */}
+      <section className="bg-rose-50/60 py-16 sm:py-24">
         <Container>
-          <SectionHeader
-            eyebrow="Profil"
-            title="Profil Sekolah"
-            subtitle="Visi dan Misi SMKN 19 Jakarta."
-          />
-          <div className="mt-12 grid gap-6 lg:grid-cols-2">
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
-              <h3 className="font-display text-lg font-semibold text-gray-900">
-                Visi
-              </h3>
-              <p className="mt-3 text-gray-700">
-                Terwujudnya Sumber Daya Manusia yang Bertaqwa, Cerdas, Terampil,
-                Berbudaya Lingkungan dan Berwawasan Global.
-              </p>
-              <h3 className="mt-8 font-display text-lg font-semibold text-gray-900">
-                Misi
-              </h3>
-              <ul className="mt-3 list-disc space-y-2 pl-5 text-gray-700 marker:text-brand-500">
-                <li>
-                  Meningkatkan kualitas keimanan, ketaqwaan, dan akhlak mulia.
-                </li>
-                <li>Menumbuhkembangkan semangat dan berinovasi.</li>
-                <li>
-                  Menyiapkan murid yang kompeten dan mampu bersaing secara
-                  global.
-                </li>
-                <li>
-                  Meningkatkan profesionalitas dan kompetensi guru berbasis
-                  teknologi.
-                </li>
-                <li>
-                  Mengembangkan kegiatan pembelajaran yang berkesadaran,
-                  bermakna, dan menyenangkan sesuai dengan dunia usaha dan
-                  industri.
-                </li>
-                <li>Mewujudkan sekolah yang berbudaya Adiwiyata.</li>
-              </ul>
+          <div className="grid items-start gap-10 lg:grid-cols-5">
+            <div className="lg:col-span-2">
+              <div className="relative mx-auto max-w-sm">
+                <div className="absolute -inset-2 rounded-3xl bg-gradient-to-br from-rose-200 to-rose-100 blur-xl" />
+                <div className="relative overflow-hidden rounded-3xl border-4 border-white bg-white shadow-xl">
+                  <img
+                    src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=600&h=720&q=70"
+                    alt="Kepala Sekolah"
+                    className="aspect-[5/6] w-full object-cover"
+                  />
+                </div>
+              </div>
+              <div className="mt-6 text-center">
+                <p className="font-display text-lg font-bold text-rose-900">
+                  Ibu Sri Muljani, S.Pd.
+                </p>
+                <p className="mt-1 text-sm text-rose-700">
+                  Kepala SMKN 19 Jakarta
+                </p>
+              </div>
             </div>
-
-            <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
-              <h3 className="font-display text-lg font-semibold text-gray-900">
-                Sekilas
-              </h3>
-              <p className="mt-3 text-gray-700">
-                SMKN 19 Jakarta berkomitmen mencetak lulusan berkarakter,
-                kompeten, dan siap bersaing melalui pembelajaran berkualitas
-                serta kemitraan industri.
+            <div className="lg:col-span-3">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-rose-700">
+                Sambutan Kepala Sekolah
               </p>
-              <dl className="mt-6 space-y-3 text-sm text-gray-700">
+              <h2 className="mt-2 font-display text-3xl font-bold text-rose-900 sm:text-4xl">
+                Selamat Datang di SMKN 19 Jakarta
+              </h2>
+              <Quote className="mt-6 h-8 w-8 text-rose-300" />
+              <div className="mt-3 space-y-4 text-base leading-relaxed text-gray-700">
+                <p>
+                  <strong>Assalamualaikum warahmatullahi wabarakatuh,</strong>
+                </p>
+                <p>
+                  Selamat datang di website resmi SMKN 19 Jakarta. Kami
+                  berkomitmen mewujudkan lulusan yang bertaqwa, cerdas,
+                  terampil, dan berdaya saing, melalui pembelajaran berbasis
+                  proyek, <em>link &amp; match</em> dengan industri, serta
+                  lingkungan belajar yang aman dan menyenangkan.
+                </p>
+                <p>
+                  Kami mengundang seluruh warga sekolah dan orang tua untuk
+                  bersinergi membentuk karakter peserta didik yang berakhlak
+                  mulia dan adaptif terhadap perkembangan teknologi.
+                </p>
+                <p>Wassalamualaikum warahmatullahi wabarakatuh.</p>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* Visi & Misi */}
+      <section className="py-16 sm:py-24">
+        <Container>
+          <div className="grid gap-6 lg:grid-cols-5">
+            <div className="lg:col-span-2">
+              <div className="rounded-3xl border border-rose-200 bg-gradient-to-br from-rose-50 to-white p-8 shadow-sm">
+                <div className="grid h-12 w-12 place-items-center rounded-2xl bg-rose-600 text-white">
+                  <Target className="h-6 w-6" />
+                </div>
+                <h3 className="mt-5 font-display text-2xl font-bold text-rose-900">
+                  Visi
+                </h3>
+                <p className="mt-3 text-gray-700">
+                  Terwujudnya Sumber Daya Manusia yang{' '}
+                  <strong>Bertaqwa, Cerdas, Terampil, Berbudaya
+                  Lingkungan dan Berwawasan Global</strong>.
+                </p>
+              </div>
+            </div>
+            <div className="lg:col-span-3">
+              <div className="rounded-3xl border border-rose-200 bg-white p-8 shadow-sm">
+                <div className="grid h-12 w-12 place-items-center rounded-2xl bg-rose-600 text-white">
+                  <Sparkles className="h-6 w-6" />
+                </div>
+                <h3 className="mt-5 font-display text-2xl font-bold text-rose-900">
+                  Misi
+                </h3>
+                <ul className="mt-4 space-y-3">
+                  {MISI.map((m, i) => (
+                    <li key={i} className="flex items-start gap-3 text-gray-700">
+                      <span className="mt-0.5 grid h-6 w-6 flex-none place-items-center rounded-full bg-rose-100 text-xs font-bold text-rose-700">
+                        {i + 1}
+                      </span>
+                      <span>{m}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* Info sekolah */}
+      <section className="bg-gray-50 py-16 sm:py-24">
+        <Container>
+          <div className="rounded-3xl border border-gray-200 bg-white p-8 shadow-sm sm:p-10">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-rose-700">
+              Profil
+            </p>
+            <h3 className="mt-2 font-display text-2xl font-bold text-gray-900 sm:text-3xl">
+              Informasi Sekolah
+            </h3>
+            <p className="mt-3 max-w-3xl text-gray-600">
+              SMKN 19 Jakarta berkomitmen mencetak lulusan berkarakter,
+              kompeten, dan siap bersaing melalui pembelajaran berkualitas
+              serta kemitraan industri.
+            </p>
+            <dl className="mt-8 grid gap-x-8 gap-y-5 sm:grid-cols-2">
+              <div className="flex items-start gap-3">
+                <span className="mt-0.5 grid h-9 w-9 flex-none place-items-center rounded-xl bg-rose-100 text-rose-700">
+                  <MapPin className="h-4 w-4" />
+                </span>
                 <div>
-                  <dt className="font-medium text-gray-900">Alamat</dt>
-                  <dd>
+                  <dt className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    Alamat
+                  </dt>
+                  <dd className="mt-1 text-sm text-gray-800">
                     Jl. Danau Limboto No.11, RT.21/RW.4, Bend. Hilir, Tanah
                     Abang, Jakarta Pusat 10210
                   </dd>
                 </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="mt-0.5 grid h-9 w-9 flex-none place-items-center rounded-xl bg-rose-100 text-rose-700">
+                  <Phone className="h-4 w-4" />
+                </span>
                 <div>
-                  <dt className="font-medium text-gray-900">Telepon</dt>
-                  <dd>(021) 5734929</dd>
+                  <dt className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    Telepon
+                  </dt>
+                  <dd className="mt-1 text-sm text-gray-800">(021) 5734929</dd>
                 </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="mt-0.5 grid h-9 w-9 flex-none place-items-center rounded-xl bg-rose-100 text-rose-700">
+                  <Mail className="h-4 w-4" />
+                </span>
                 <div>
-                  <dt className="font-medium text-gray-900">Email</dt>
-                  <dd>
+                  <dt className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    Email
+                  </dt>
+                  <dd className="mt-1 text-sm">
                     <a
                       href="mailto:smkn19jkt@gmail.com"
-                      className="text-brand-600 hover:underline"
+                      className="text-rose-700 hover:underline"
                     >
                       smkn19jkt@gmail.com
                     </a>
                   </dd>
                 </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="mt-0.5 grid h-9 w-9 flex-none place-items-center rounded-xl bg-rose-100 text-rose-700">
+                  <Globe className="h-4 w-4" />
+                </span>
                 <div>
-                  <dt className="font-medium text-gray-900">Website</dt>
-                  <dd>
+                  <dt className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    Website
+                  </dt>
+                  <dd className="mt-1 text-sm">
                     <a
                       href="https://smkn19jkt.sch.id/"
                       target="_blank"
                       rel="noreferrer"
-                      className="text-brand-600 hover:underline"
+                      className="text-rose-700 hover:underline"
                     >
                       smkn19jkt.sch.id
                     </a>
                   </dd>
                 </div>
-              </dl>
-            </div>
+              </div>
+            </dl>
           </div>
         </Container>
       </section>
 
-      {/* Daftar Guru & Tata Usaha */}
-      <section className="py-20">
+      {/* Daftar Guru & TU */}
+      <section className="py-16 sm:py-24">
         <Container>
-          <SectionHeader
-            eyebrow="Tenaga Pendidik & Kependidikan"
-            title="Daftar Guru & Tata Usaha"
-            subtitle="Tim pengajar dan tenaga kependidikan SMKN 19 Jakarta."
-          />
-          <div className="mt-10 flex flex-wrap items-center gap-3">
+          <div className="text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-rose-700">
+              Tenaga Pendidik & Kependidikan
+            </p>
+            <h2 className="mt-2 font-display text-3xl font-bold text-gray-900 sm:text-4xl">
+              Daftar Guru &amp; Tata Usaha
+            </h2>
+            <p className="mt-3 text-base text-gray-600">
+              Tim pengajar dan tenaga kependidikan SMKN 19 Jakarta.
+            </p>
+          </div>
+
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
             <div className="relative flex-1 sm:max-w-sm">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
               <input
@@ -233,13 +360,13 @@ export function Profil() {
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 placeholder="Cari nama / jabatan…"
-                className="w-full rounded-full border-gray-300 pl-9 text-sm focus:border-brand-500 focus:ring-brand-500"
+                className="w-full rounded-full border-gray-300 pl-9 text-sm focus:border-rose-500 focus:ring-rose-500"
               />
             </div>
             <select
               value={kategori}
               onChange={(e) => setKategori(e.target.value)}
-              className="rounded-full border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500"
+              className="rounded-full border-gray-300 text-sm focus:border-rose-500 focus:ring-rose-500"
             >
               {kategoriList.map((k) => (
                 <option key={k} value={k}>
@@ -259,74 +386,66 @@ export function Profil() {
               if (sections.length === 0) return null
               return (
                 <div key={grup}>
-                  <div className="flex items-center justify-between border-b border-gray-200 pb-3">
-                    <h2 className="font-display text-2xl font-bold text-gray-900">
+                  <div className="flex items-center justify-between border-b border-rose-100 pb-3">
+                    <h3 className="font-display text-2xl font-bold text-gray-900">
                       {grup === 'Guru' ? 'Daftar Guru' : 'Tata Usaha'}
-                    </h2>
-                    <span className="text-sm text-gray-500">
-                      Total: <span className="font-semibold text-gray-900">{totalGrup}</span> orang
+                    </h3>
+                    <span className="rounded-full bg-rose-50 px-3 py-1 text-xs font-semibold text-rose-700">
+                      {totalGrup} orang
                     </span>
                   </div>
-                  <div className="mt-8 space-y-10">
-                    {sections.map(([kat, list]) => (
-                      <div key={kat}>
-                        <div className="flex items-center justify-between">
-                          <h3 className="font-display text-lg font-semibold text-gray-900">
-                            {kat}
-                          </h3>
-                          <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600">
-                            {list.length} orang
-                          </span>
-                        </div>
-                        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                          {list.map((g) => (
-                            <div
-                              key={g.name}
-                              className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-3 shadow-sm"
-                            >
-                              {g.foto_url ? (
+                  {sections.map(([kat, list]) => (
+                    <div key={kat} className="mt-8">
+                      <h4 className="font-display text-base font-semibold text-rose-900">
+                        {kat}
+                      </h4>
+                      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        {list.map((p) => (
+                          <div
+                            key={`${p.name}-${p.jabatan}`}
+                            className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-3 shadow-sm transition hover:-translate-y-0.5 hover:border-rose-200 hover:shadow-md"
+                          >
+                            <div className="h-12 w-12 flex-none overflow-hidden rounded-full bg-gradient-to-br from-rose-100 to-rose-200 ring-2 ring-rose-100">
+                              {p.foto_url ? (
                                 <img
-                                  src={g.foto_url}
-                                  alt={g.name}
+                                  src={p.foto_url}
+                                  alt={p.name}
+                                  className="h-full w-full object-cover"
                                   loading="lazy"
-                                  className="h-10 w-10 flex-none rounded-full object-cover"
+                                  onError={(e) => {
+                                    e.currentTarget.style.display = 'none'
+                                  }}
                                 />
                               ) : (
-                                <div className="grid h-10 w-10 flex-none place-items-center rounded-full bg-gradient-to-br from-brand-100 to-brand-200 text-brand-700">
-                                  <span className="text-xs font-semibold">
-                                    {g.name
-                                      .split(' ')
-                                      .map((s) => s[0])
-                                      .slice(0, 2)
-                                      .join('')}
-                                  </span>
+                                <div className="grid h-full w-full place-items-center text-xs font-bold text-rose-700">
+                                  {initials(p.name)}
                                 </div>
                               )}
-                              <div className="min-w-0">
-                                <p className="truncate text-sm font-semibold text-gray-900">
-                                  {g.name}
-                                </p>
-                                <p className="truncate text-xs text-gray-500">
-                                  {g.jabatan}
-                                </p>
-                              </div>
                             </div>
-                          ))}
-                        </div>
+                            <div className="min-w-0">
+                              <p className="truncate font-display text-sm font-semibold text-gray-900">
+                                {p.name}
+                              </p>
+                              <p className="mt-0.5 line-clamp-2 text-xs text-gray-500">
+                                {p.jabatan}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  ))}
                 </div>
               )
             })}
-            {filtered.length === 0 && (
-              <p className="text-center text-sm text-gray-500">
-                Tidak ada hasil untuk pencarian Anda.
-              </p>
-            )}
           </div>
         </Container>
       </section>
     </>
   )
+}
+
+function initials(name: string) {
+  const parts = name.trim().split(/\s+/).slice(0, 2)
+  return parts.map((p) => p[0]?.toUpperCase() ?? '').join('') || '?'
 }
