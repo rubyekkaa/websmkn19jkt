@@ -14,7 +14,6 @@ import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../lib/auth'
 import {
   MOU_BUCKET as BUCKET,
-  cleanupMoUFiles,
   extractStoragePath,
 } from '../../lib/mouStorage'
 import type { MoUPartner, MoUStatus } from '../../types'
@@ -249,9 +248,20 @@ export function AdminMoUForm() {
       setError(err.message)
       return
     }
-    // Best-effort cleanup file logo + dokumen yang sebelumnya di-upload
-    // ke bucket mou-files. URL eksternal (non-bucket) di-skip otomatis.
-    await cleanupMoUFiles(logoUrl, documentUrl)
+    // Cleanup file storage berdasarkan URL ASLI di DB (bukan state form yang
+    // mungkin sudah diubah user) + semua file yang di-upload session ini.
+    const toRemove = new Set<string>()
+    for (const origUrl of [
+      originalLogoUrlRef.current,
+      originalDocumentUrlRef.current,
+    ]) {
+      const p = extractStoragePath(origUrl)
+      if (p) toRemove.add(p)
+    }
+    for (const p of sessionUploadsRef.current) {
+      toRemove.add(p)
+    }
+    await removeStoragePaths(Array.from(toRemove))
     navigate('/admin/mou')
   }
 
