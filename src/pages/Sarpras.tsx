@@ -8,6 +8,7 @@ import {
   Briefcase,
   ShoppingBag,
   Calculator,
+  HeartPulse,
 } from 'lucide-react'
 import { Container } from '../components/Container'
 import { PageHero } from '../components/PageHero'
@@ -64,6 +65,13 @@ export const SARPRAS_ITEMS = [
     icon: Calculator,
     title: 'TeFa Akuntansi',
     desc: 'Teaching factory AKL — praktik akuntansi & perpajakan modern.',
+  },
+  {
+    to: '/sarpras/uks',
+    slug: 'uks',
+    icon: HeartPulse,
+    title: 'UKS',
+    desc: 'Unit Kesehatan Sekolah — ruang istirahat & layanan kesehatan siswa.',
   },
 ] as const
 

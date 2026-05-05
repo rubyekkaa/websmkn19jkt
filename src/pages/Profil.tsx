@@ -164,7 +164,7 @@ export function Profil() {
                 <div className="absolute -inset-2 rounded-3xl bg-gradient-to-br from-rose-200 to-rose-100 blur-xl" />
                 <div className="relative overflow-hidden rounded-3xl border-4 border-white bg-white shadow-xl">
                   <img
-                    src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=600&h=720&q=70"
+                    src="/images/kepala-sekolah.jpg"
                     alt="Kepala Sekolah"
                     className="aspect-[5/6] w-full object-cover"
                   />
