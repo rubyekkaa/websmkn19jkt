@@ -211,36 +211,48 @@ export function Profil() {
       </section>
 
       {/* Visi & Misi */}
-      <section className="py-16 sm:py-24">
+      <section className="bg-white py-16 sm:py-24">
         <Container>
           <div className="grid gap-6 lg:grid-cols-5">
             <div className="lg:col-span-2">
-              <div className="rounded-3xl border border-rose-200 bg-gradient-to-br from-rose-50 to-white p-8 shadow-sm">
-                <div className="grid h-12 w-12 place-items-center rounded-2xl bg-rose-600 text-white">
+              <div className="h-full rounded-3xl border border-purple-200 bg-purple-50/70 p-8 shadow-sm">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-purple-700">
+                  Visi
+                </p>
+                <div className="mt-3 grid h-12 w-12 place-items-center rounded-2xl bg-purple-600 text-white shadow-sm">
                   <Target className="h-6 w-6" />
                 </div>
-                <h3 className="mt-5 font-display text-2xl font-bold text-rose-900">
-                  Visi
+                <h3 className="mt-5 font-display text-2xl font-bold text-purple-900">
+                  Cita-cita SMKN 19
                 </h3>
                 <p className="mt-3 text-gray-700">
                   Terwujudnya Sumber Daya Manusia yang{' '}
-                  <strong>Bertaqwa, Cerdas, Terampil, Berbudaya
-                  Lingkungan dan Berwawasan Global</strong>.
+                  <strong>
+                    Bertaqwa, Cerdas, Terampil, Berbudaya Lingkungan dan
+                    Berwawasan Global
+                  </strong>
+                  .
                 </p>
               </div>
             </div>
             <div className="lg:col-span-3">
-              <div className="rounded-3xl border border-rose-200 bg-white p-8 shadow-sm">
-                <div className="grid h-12 w-12 place-items-center rounded-2xl bg-rose-600 text-white">
+              <div className="h-full rounded-3xl border border-amber-200 bg-amber-50/70 p-8 shadow-sm">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-700">
+                  Misi
+                </p>
+                <div className="mt-3 grid h-12 w-12 place-items-center rounded-2xl bg-amber-500 text-white shadow-sm">
                   <Sparkles className="h-6 w-6" />
                 </div>
-                <h3 className="mt-5 font-display text-2xl font-bold text-rose-900">
-                  Misi
+                <h3 className="mt-5 font-display text-2xl font-bold text-amber-900">
+                  Langkah Menuju Visi
                 </h3>
-                <ul className="mt-4 space-y-3">
+                <ul className="mt-4 grid gap-3 sm:grid-cols-2">
                   {MISI.map((m, i) => (
-                    <li key={i} className="flex items-start gap-3 text-gray-700">
-                      <span className="mt-0.5 grid h-6 w-6 flex-none place-items-center rounded-full bg-rose-100 text-xs font-bold text-rose-700">
+                    <li
+                      key={i}
+                      className="flex items-start gap-3 rounded-2xl border border-amber-200/80 bg-white/80 p-3 text-sm text-gray-700"
+                    >
+                      <span className="mt-0.5 grid h-6 w-6 flex-none place-items-center rounded-full bg-amber-500 text-xs font-bold text-white">
                         {i + 1}
                       </span>
                       <span>{m}</span>
@@ -254,91 +266,82 @@ export function Profil() {
       </section>
 
       {/* Info sekolah */}
-      <section className="bg-gray-50 py-16 sm:py-24">
+      <section className="bg-white py-16 sm:py-24">
         <Container>
-          <div className="rounded-3xl border border-gray-200 bg-white p-8 shadow-sm sm:p-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-rose-700">
-              Profil
-            </p>
-            <h3 className="mt-2 font-display text-2xl font-bold text-gray-900 sm:text-3xl">
+          <div className="rounded-3xl border border-sky-200 bg-sky-50/70 p-8 shadow-sm sm:p-10">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-700">
               Informasi Sekolah
+            </p>
+            <h3 className="mt-2 font-display text-2xl font-bold text-sky-900 sm:text-3xl">
+              Profil Singkat & Kontak
             </h3>
-            <p className="mt-3 max-w-3xl text-gray-600">
+            <p className="mt-3 max-w-3xl text-gray-700">
               SMKN 19 Jakarta berkomitmen mencetak lulusan berkarakter,
               kompeten, dan siap bersaing melalui pembelajaran berkualitas
               serta kemitraan industri.
             </p>
-            <dl className="mt-8 grid gap-x-8 gap-y-5 sm:grid-cols-2">
-              <div className="flex items-start gap-3">
-                <span className="mt-0.5 grid h-9 w-9 flex-none place-items-center rounded-xl bg-rose-100 text-rose-700">
-                  <MapPin className="h-4 w-4" />
-                </span>
-                <div>
-                  <dt className="text-xs font-semibold uppercase tracking-wider text-gray-500">
-                    Alamat
-                  </dt>
-                  <dd className="mt-1 text-sm text-gray-800">
-                    Jl. Danau Limboto No.11, RT.21/RW.4, Bend. Hilir, Tanah
-                    Abang, Jakarta Pusat 10210
-                  </dd>
+            <dl className="mt-8 grid gap-4 sm:grid-cols-2">
+              {[
+                {
+                  icon: MapPin,
+                  label: 'Alamat',
+                  value:
+                    'Jl. Danau Limboto No.11, RT.21/RW.4, Bend. Hilir, Tanah Abang, Jakarta Pusat 10210',
+                },
+                {
+                  icon: Phone,
+                  label: 'Telepon',
+                  value: '(021) 5734929',
+                },
+                {
+                  icon: Mail,
+                  label: 'Email',
+                  href: 'mailto:smkn19jkt@gmail.com',
+                  value: 'smkn19jkt@gmail.com',
+                },
+                {
+                  icon: Globe,
+                  label: 'Website',
+                  href: 'https://smkn19jkt.sch.id/',
+                  external: true,
+                  value: 'smkn19jkt.sch.id',
+                },
+              ].map((c) => (
+                <div
+                  key={c.label}
+                  className="flex items-start gap-3 rounded-2xl border border-sky-200/80 bg-white/90 p-4"
+                >
+                  <span className="mt-0.5 grid h-9 w-9 flex-none place-items-center rounded-xl bg-sky-100 text-sky-700">
+                    <c.icon className="h-4 w-4" />
+                  </span>
+                  <div className="min-w-0">
+                    <dt className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+                      {c.label}
+                    </dt>
+                    <dd className="mt-1 text-sm text-gray-800">
+                      {c.href ? (
+                        <a
+                          href={c.href}
+                          target={c.external ? '_blank' : undefined}
+                          rel={c.external ? 'noreferrer' : undefined}
+                          className="text-sky-700 hover:underline"
+                        >
+                          {c.value}
+                        </a>
+                      ) : (
+                        c.value
+                      )}
+                    </dd>
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <span className="mt-0.5 grid h-9 w-9 flex-none place-items-center rounded-xl bg-rose-100 text-rose-700">
-                  <Phone className="h-4 w-4" />
-                </span>
-                <div>
-                  <dt className="text-xs font-semibold uppercase tracking-wider text-gray-500">
-                    Telepon
-                  </dt>
-                  <dd className="mt-1 text-sm text-gray-800">(021) 5734929</dd>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <span className="mt-0.5 grid h-9 w-9 flex-none place-items-center rounded-xl bg-rose-100 text-rose-700">
-                  <Mail className="h-4 w-4" />
-                </span>
-                <div>
-                  <dt className="text-xs font-semibold uppercase tracking-wider text-gray-500">
-                    Email
-                  </dt>
-                  <dd className="mt-1 text-sm">
-                    <a
-                      href="mailto:smkn19jkt@gmail.com"
-                      className="text-rose-700 hover:underline"
-                    >
-                      smkn19jkt@gmail.com
-                    </a>
-                  </dd>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <span className="mt-0.5 grid h-9 w-9 flex-none place-items-center rounded-xl bg-rose-100 text-rose-700">
-                  <Globe className="h-4 w-4" />
-                </span>
-                <div>
-                  <dt className="text-xs font-semibold uppercase tracking-wider text-gray-500">
-                    Website
-                  </dt>
-                  <dd className="mt-1 text-sm">
-                    <a
-                      href="https://smkn19jkt.sch.id/"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-rose-700 hover:underline"
-                    >
-                      smkn19jkt.sch.id
-                    </a>
-                  </dd>
-                </div>
-              </div>
+              ))}
             </dl>
           </div>
         </Container>
       </section>
 
       {/* Daftar Guru & TU */}
-      <section className="py-16 sm:py-24">
+      <section className="bg-gray-50 py-16 sm:py-24">
         <Container>
           <div className="text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-rose-700">

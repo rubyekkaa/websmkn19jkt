@@ -1,7 +1,9 @@
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import {
+  Calendar,
   FileText,
   FolderClosed,
+  Handshake,
   Hash,
   Home,
   Image as ImageIcon,
@@ -28,6 +30,8 @@ const NAV: NavItem[] = [
   { to: '/admin/kategori', label: 'Kategori', icon: FolderClosed, roles: ['admin', 'editor'] },
   { to: '/admin/tag', label: 'Tag', icon: Hash, roles: ['admin', 'editor'] },
   { to: '/admin/galleries', label: 'Galeri', icon: ImageIcon, roles: ['admin', 'editor'] },
+  { to: '/admin/mou', label: 'MoU', icon: Handshake, roles: ['admin', 'editor'] },
+  { to: '/admin/agenda', label: 'Agenda', icon: Calendar, roles: ['admin', 'editor'] },
   { to: '/admin/guru', label: 'Guru & TU', icon: Users, roles: ['admin'] },
   { to: '/admin/users', label: 'Pengguna', icon: Shield, roles: ['admin'] },
 ]
