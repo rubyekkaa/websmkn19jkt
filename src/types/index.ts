@@ -31,19 +31,34 @@ export type Post = {
 }
 
 export type Jurusan = {
+  id?: string
   slug: string
   name: string
-  short: string
-  description: string
-  image: string
+  short_name: string | null
+  description: string | null
+  image_url: string | null
   competencies: string[]
+  career_paths?: string[]
+  duration?: string | null
+  sort_order?: number
+  created_at?: string
+  updated_at?: string
 }
 
+export type EkskulCategory = 'Olahraga' | 'Seni' | 'Akademik' | 'Keagamaan' | string
+
 export type Ekskul = {
+  id?: string
   slug: string
   name: string
-  description: string
-  image: string
+  description: string | null
+  image_url: string | null
+  schedule?: string | null
+  pembina?: string | null
+  category?: EkskulCategory | null
+  sort_order?: number
+  created_at?: string
+  updated_at?: string
 }
 
 export type Guru = {

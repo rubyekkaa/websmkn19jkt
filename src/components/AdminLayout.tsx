@@ -1,5 +1,6 @@
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import {
+  BookOpen,
   Calendar,
   FileText,
   FolderClosed,
@@ -10,6 +11,7 @@ import {
   LogOut,
   Plus,
   Shield,
+  Sparkles,
   Users,
   type LucideIcon,
 } from 'lucide-react'
@@ -30,6 +32,8 @@ const NAV: NavItem[] = [
   { to: '/admin/kategori', label: 'Kategori', icon: FolderClosed, roles: ['admin', 'editor'] },
   { to: '/admin/tag', label: 'Tag', icon: Hash, roles: ['admin', 'editor'] },
   { to: '/admin/galleries', label: 'Galeri', icon: ImageIcon, roles: ['admin', 'editor'] },
+  { to: '/admin/jurusan', label: 'Jurusan', icon: BookOpen, roles: ['admin', 'editor'] },
+  { to: '/admin/ekskul', label: 'Ekskul', icon: Sparkles, roles: ['admin', 'editor'] },
   { to: '/admin/mou', label: 'MoU', icon: Handshake, roles: ['admin', 'editor'] },
   { to: '/admin/agenda', label: 'Agenda', icon: Calendar, roles: ['admin', 'editor'] },
   { to: '/admin/guru', label: 'Guru & TU', icon: Users, roles: ['admin'] },

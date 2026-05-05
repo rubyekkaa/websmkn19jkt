@@ -16,8 +16,8 @@ import {
   Newspaper,
 } from 'lucide-react'
 import { Container } from '../components/Container'
-import { JURUSAN } from '../data/jurusan'
-import { EKSKUL } from '../data/ekskul'
+import { useEkskul } from '../lib/useEkskul'
+import { useJurusan } from '../lib/useJurusan'
 import { TONE_STYLES } from '../data/menu'
 import { supabase, isSupabaseConfigured } from '../lib/supabase'
 import type { Post } from '../types'
@@ -32,6 +32,8 @@ const HERO = {
 export function Home() {
   const [latestPosts, setLatestPosts] = useState<Post[]>([])
   const [postsLoading, setPostsLoading] = useState(true)
+  const { items: ekskul } = useEkskul()
+  const { items: jurusan } = useJurusan()
 
   useEffect(() => {
     if (!isSupabaseConfigured) {
@@ -185,23 +187,25 @@ export function Home() {
         ctaLabel="Lihat Kurikulum"
       >
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {JURUSAN.map((j) => (
+          {jurusan.map((j) => (
             <Link
               key={j.slug}
               to={`/kurikulum/jurusan/${j.slug}`}
               className="group overflow-hidden rounded-2xl border border-purple-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-purple-300 hover:shadow-md"
             >
               <div className="aspect-[4/3] overflow-hidden bg-gray-100">
-                <img
-                  src={j.image}
-                  alt={j.name}
-                  className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                  loading="lazy"
-                />
+                {j.image_url && (
+                  <img
+                    src={j.image_url}
+                    alt={j.name}
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                )}
               </div>
               <div className="p-4">
                 <p className="text-xs font-semibold uppercase tracking-wider text-purple-700">
-                  {j.short}
+                  {j.short_name ?? ''}
                 </p>
                 <h3 className="mt-1 font-display text-sm font-semibold text-gray-900">
                   {j.name}
@@ -272,18 +276,20 @@ export function Home() {
         ctaLabel="Lihat Kesiswaan"
       >
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {EKSKUL.slice(0, 8).map((e) => (
+          {ekskul.slice(0, 8).map((e) => (
             <div
               key={e.slug}
               className="overflow-hidden rounded-2xl border border-teal-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
             >
               <div className="aspect-[4/3] overflow-hidden bg-gradient-to-br from-teal-50 to-teal-100">
-                <img
-                  src={e.image}
-                  alt={e.name}
-                  className="h-full w-full object-cover"
-                  loading="lazy"
-                />
+                {e.image_url && (
+                  <img
+                    src={e.image_url}
+                    alt={e.name}
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                  />
+                )}
               </div>
               <div className="p-4">
                 <h3 className="font-display text-sm font-semibold text-gray-900">
