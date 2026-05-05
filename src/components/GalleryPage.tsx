@@ -5,14 +5,16 @@ import { Container } from './Container'
 import { PageHero } from './PageHero'
 import { TONE_STYLES, type MenuItem } from '../data/menu'
 import { supabase, isSupabaseConfigured } from '../lib/supabase'
+import type { GalleryPhoto as DbGalleryPhoto } from '../types'
 
-export type GalleryPhoto = {
-  id: string
-  image_url: string
-  caption: string | null
-  taken_at: string | null
-  sort_order: number
-}
+/**
+ * Subset of the DB row that the public gallery actually renders.
+ * Admin pages use the full {@link DbGalleryPhoto} type.
+ */
+export type GalleryPhoto = Pick<
+  DbGalleryPhoto,
+  'id' | 'image_url' | 'caption' | 'taken_at' | 'sort_order'
+>
 
 type Props = {
   /** Slug used to look up the gallery_collections row in PR B. */

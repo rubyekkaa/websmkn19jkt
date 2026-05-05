@@ -78,3 +78,27 @@ export type Teacher = {
   created_at: string
   updated_at: string
 }
+
+export type GalleryCategory = 'humas-dudi' | 'kesiswaan' | 'sarpras' | string
+
+export type GalleryCollection = {
+  id: string
+  slug: string
+  name: string
+  category: GalleryCategory | null
+  description: string | null
+  cover_url: string | null
+  sort_order: number
+  created_at: string
+  updated_at: string
+}
+
+export type GalleryPhoto = {
+  id: string
+  collection_id: string
+  image_url: string
+  caption: string | null
+  taken_at: string | null
+  sort_order: number
+  created_at: string
+}

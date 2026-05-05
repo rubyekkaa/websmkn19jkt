@@ -35,6 +35,8 @@ import { AdminTag } from './pages/admin/Tag'
 import { AdminGuru } from './pages/admin/Guru'
 import { AdminGuruForm } from './pages/admin/GuruForm'
 import { AdminUsers } from './pages/admin/Users'
+import { AdminGalleries } from './pages/admin/Galleries'
+import { AdminGalleryDetail } from './pages/admin/GalleryDetail'
 
 const routes: RouteObject[] = [
   {
@@ -133,6 +135,8 @@ const routes: RouteObject[] = [
           </RoleGuard>
         ),
       },
+      { path: 'galleries', element: <AdminGalleries /> },
+      { path: 'galleries/:slug', element: <AdminGalleryDetail /> },
     ],
   },
 ]
