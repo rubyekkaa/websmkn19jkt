@@ -22,39 +22,16 @@ import { TONE_STYLES } from '../data/menu'
 import { supabase, isSupabaseConfigured } from '../lib/supabase'
 import type { Post } from '../types'
 
-const SLIDES = [
-  {
-    title: 'SMKN 19 Jakarta',
-    subtitle:
-      'Sekolah Berkarakter & Berprestasi — Mencetak generasi siap kerja dan berwirausaha.',
-    image: '/images/1.jpg',
-  },
-  {
-    title: 'Belajar dari Industri',
-    subtitle:
-      'Kurikulum link & match dengan dunia industri, didukung praktik langsung di laboratorium modern.',
-    image: '/images/2.jpg',
-  },
-  {
-    title: 'Karakter, Iman, & Prestasi',
-    subtitle:
-      'Membangun siswa yang bertaqwa, cerdas, terampil, dan berwawasan lingkungan.',
-    image: '/images/3.jpg',
-  },
-]
+const HERO = {
+  title: 'SMKN 19 Jakarta',
+  subtitle:
+    'Sekolah Berkarakter & Berprestasi — Mencetak generasi siap kerja dan berwirausaha.',
+  image: '/images/1.jpg',
+}
 
 export function Home() {
-  const [slide, setSlide] = useState(0)
   const [latestPosts, setLatestPosts] = useState<Post[]>([])
   const [postsLoading, setPostsLoading] = useState(true)
-
-  useEffect(() => {
-    const id = setInterval(
-      () => setSlide((s) => (s + 1) % SLIDES.length),
-      6000,
-    )
-    return () => clearInterval(id)
-  }, [])
 
   useEffect(() => {
     if (!isSupabaseConfigured) {
@@ -80,24 +57,15 @@ export function Home() {
 
   return (
     <>
-      {/* Hero slider */}
+      {/* Hero */}
       <section className="relative isolate overflow-hidden">
         <div className="absolute inset-0 -z-10">
-          {SLIDES.map((s, i) => (
-            <div
-              key={s.title}
-              className={`absolute inset-0 transition-opacity duration-1000 ${
-                i === slide ? 'opacity-100' : 'opacity-0'
-              }`}
-            >
-              <img
-                src={s.image}
-                alt=""
-                className="h-full w-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-gray-950/85 via-gray-950/55 to-gray-950/30" />
-            </div>
-          ))}
+          <img
+            src={HERO.image}
+            alt=""
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-gray-950/85 via-gray-950/55 to-gray-950/30" />
         </div>
         <Container>
           <div className="grid gap-10 py-24 md:py-36 lg:grid-cols-2 lg:py-44">
@@ -107,10 +75,10 @@ export function Home() {
                 Penerimaan murid baru terbuka
               </span>
               <h1 className="mt-5 font-display text-4xl font-bold text-white sm:text-5xl lg:text-6xl">
-                {SLIDES[slide].title}
+                {HERO.title}
               </h1>
               <p className="mt-5 text-lg text-gray-200">
-                {SLIDES[slide].subtitle}
+                {HERO.subtitle}
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
@@ -128,19 +96,6 @@ export function Home() {
                 </Link>
               </div>
             </div>
-          </div>
-          <div className="flex justify-center gap-2 pb-12 lg:absolute lg:bottom-12 lg:left-1/2 lg:-translate-x-1/2 lg:pb-0">
-            {SLIDES.map((_, i) => (
-              <button
-                key={i}
-                type="button"
-                aria-label={`Slide ${i + 1}`}
-                onClick={() => setSlide(i)}
-                className={`h-1.5 rounded-full transition-all ${
-                  i === slide ? 'w-8 bg-white' : 'w-2 bg-white/40'
-                }`}
-              />
-            ))}
           </div>
         </Container>
       </section>
